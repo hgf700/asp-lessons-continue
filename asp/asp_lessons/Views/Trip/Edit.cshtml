@@ -1,0 +1,40 @@
+﻿@model aspapp.Data.Models.Trip
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GuideId" class="control-label"></label>
+                <select asp-for="GuideId" class="form-control" asp-items="ViewBag.Guides">
+                    <option value="">Select guide ...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TravelerId" class="control-label"></label>
+                <select asp-for="TravelerId" class="form-control" asp-items="ViewBag.Travelers">
+                    <option value="">Select traveler ...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

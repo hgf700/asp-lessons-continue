@@ -1,0 +1,35 @@
+﻿@model aspapp.Data.Models.Trip
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Usuń podróż</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Delete" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" /> <!-- Ukryte pole, które zawiera id podróżnika -->
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label asp-for="Title" class="control-label">Title:</label>
+                <input asp-for="Title" class="form-control" readonly /> <!-- Tylko do odczytu -->
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Description:</label>
+                <input asp-for="Description" class="form-control" readonly /> <!-- Tylko do odczytu -->
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Usuń" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

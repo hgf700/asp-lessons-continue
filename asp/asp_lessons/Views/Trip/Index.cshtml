@@ -1,0 +1,31 @@
+﻿@model IEnumerable<aspapp.Data.Models.Trip>
+
+@{
+    ViewData["Title"] = "Lista Wycieczek";
+}
+
+<h2>Lista Wycieczek</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Opis</th>
+            <th>Przewodnik</th>
+            <th>Podróżnik</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var trip in Model)
+        {
+            <tr>
+                <td>@trip.Title</td>
+                <td>@trip.Description</td>
+                <td>@(trip.Guide != null ? trip.Guide.Firstname : "Brak przewodnika")</td>
+                <td>@(trip.Traveler != null ? trip.Traveler.Firstname : "Brak podróżnika")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="CreateTrip" class="btn btn-primary">Dodaj nową wycieczkę</a>
