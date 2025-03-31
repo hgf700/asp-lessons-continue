@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\USER098\\Documents\\GitHub\\aspapp.Data\\aspapp.Data.csproj": {}
+    "C:\\Users\\USER098\\Documents\\GitHub\\asp-lessons-continue\\asp\\aspapp.Data\\aspapp.Data.csproj": {}
   },
   "projects": {
-    "C:\\Users\\USER098\\Documents\\GitHub\\aspapp.Data\\aspapp.Data.csproj": {
+    "C:\\Users\\USER098\\Documents\\GitHub\\asp-lessons-continue\\asp\\aspapp.Data\\aspapp.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\USER098\\Documents\\GitHub\\aspapp.Data\\aspapp.Data.csproj",
+        "projectUniqueName": "C:\\Users\\USER098\\Documents\\GitHub\\asp-lessons-continue\\asp\\aspapp.Data\\aspapp.Data.csproj",
         "projectName": "aspapp.Data",
-        "projectPath": "C:\\Users\\USER098\\Documents\\GitHub\\aspapp.Data\\aspapp.Data.csproj",
+        "projectPath": "C:\\Users\\USER098\\Documents\\GitHub\\asp-lessons-continue\\asp\\aspapp.Data\\aspapp.Data.csproj",
         "packagesPath": "C:\\Users\\USER098\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\USER098\\Documents\\GitHub\\aspapp.Data\\obj\\",
+        "outputPath": "C:\\Users\\USER098\\Documents\\GitHub\\asp-lessons-continue\\asp\\aspapp.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

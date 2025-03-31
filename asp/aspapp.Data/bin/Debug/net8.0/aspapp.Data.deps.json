@@ -9,7 +9,8 @@
       "aspapp.Data/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.3",
-          "Microsoft.EntityFrameworkCore.Tools": "9.0.3"
+          "Microsoft.EntityFrameworkCore.Tools": "9.0.3",
+          "aspapp.Services": "1.0.0"
         },
         "runtime": {
           "aspapp.Data.dll": {}
@@ -1036,6 +1037,14 @@
             "fileVersion": "6.0.21.52210"
           }
         }
+      },
+      "aspapp.Services/1.0.0": {
+        "runtime": {
+          "aspapp.Services.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -1597,6 +1606,11 @@
       "sha512": "sha512-IXoJOXIqc39AIe+CIR7koBtRGMiCt/LPM3lI+PELtDIy9XdyeSrwXFdWV9dzJ2Awl0paLWUaknLxFQ5HpHZUog==",
       "path": "system.windows.extensions/6.0.0",
       "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
+    },
+    "aspapp.Services/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }
