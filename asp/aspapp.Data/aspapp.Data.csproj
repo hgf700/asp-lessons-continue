@@ -14,8 +14,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\aspapp.Services\aspapp.Services.csproj" />
-  </ItemGroup>
-
 </Project>

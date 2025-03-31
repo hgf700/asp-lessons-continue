@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("aspapp.Services")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a5bcde82a9b26e6e1b6a9b408e60d9be3fe45708")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f7188d9029c481552809273bdfd86b5e3e9f627")]
 [assembly: System.Reflection.AssemblyProductAttribute("aspapp.Services")]
 [assembly: System.Reflection.AssemblyTitleAttribute("aspapp.Services")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

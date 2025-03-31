@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using aspapp.Data.Models;
 using aspapp.Data.Repositories;
+using aspapp.Services.Services;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -8,17 +9,19 @@ namespace aspapp.Controllers
 {
     public class TravelerController : Controller
     {
-        private readonly ITravelerRepository _travelerRepository;
 
-        public TravelerController(ITravelerRepository travelerRepository)
+        private readonly ITravelerService _travelerService;
+
+        public TravelerController(ITravelerService travelerService)
         {
-            _travelerRepository = travelerRepository;
+            _travelerService = travelerService;
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var travelers = await _travelerRepository.GetAllTravelers();
+            var travelers = await _travelerService.GetAllTravelers();
             return View(travelers);
         }
 
@@ -34,7 +37,7 @@ namespace aspapp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _travelerRepository.AddTraveler(traveler);
+                await _travelerService.AddTraveler(traveler);
                 return RedirectToAction(nameof(Index));
             }
             return View(traveler);
@@ -43,7 +46,7 @@ namespace aspapp.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var traveler = await _travelerRepository.GetTravelerById(id);
+            var traveler = await _travelerService.GetTravelerById(id);
             if (traveler == null)
             {
                 return NotFound();
@@ -62,7 +65,7 @@ namespace aspapp.Controllers
 
             if (ModelState.IsValid)
             {
-                await _travelerRepository.UpdateTraveler(traveler);
+                await _travelerService.UpdateTraveler(traveler);
                 return RedirectToAction(nameof(Index));
             }
             return View(traveler);
@@ -72,7 +75,7 @@ namespace aspapp.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var traveler = await _travelerRepository.GetTravelerById(id);
+            var traveler = await _travelerService.GetTravelerById(id);
             if (traveler == null)
             {
                 return NotFound();
@@ -84,7 +87,7 @@ namespace aspapp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _travelerRepository.DeleteTraveler(id);
+            await _travelerService.DeleteTraveler(id);
             return RedirectToAction(nameof(Index));
         }
     }

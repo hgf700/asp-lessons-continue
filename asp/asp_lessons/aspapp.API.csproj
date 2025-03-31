@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\aspapp.Data\aspapp.Data.csproj" />
+    <ProjectReference Include="..\aspapp.Services\aspapp.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
