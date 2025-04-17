@@ -1,4 +1,5 @@
 ﻿using aspapp.Data.Models;
+using aspapp.Data.Models.VM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace aspapp.Services.Services
 {
     public interface ITripService
     {
-        Task<IEnumerable<Trip>> GetAllTrips();
-        Task<Trip> GetTripById(int tripId);
-        Task AddTrip(Trip trip);
-        Task UpdateTrip(Trip trip);
+        IQueryable<TripViewModel> GetAllTrips();
+        Task<TripViewModel> GetTripById(int tripId);
+        Task AddTrip(TripViewModel tripvm);
+        Task UpdateTrip(TripViewModel tripvm);
         Task DeleteTrip(int tripId);
     }
 }

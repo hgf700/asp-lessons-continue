@@ -14,15 +14,21 @@ namespace aspapp.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Trip>> GetAllTrips()
+        public IQueryable<Trip> GetAllTrips()
         {
-            return await _context.Trips.ToListAsync();
+            return _context.Trips
+                .Include(t => t.Guide)
+                .Include(t => t.Travelers);
         }
 
         public async Task<Trip> GetTripById(int tripId)
         {
-            return await _context.Trips.FindAsync(tripId);
+            return await _context.Trips
+                .Include(t => t.Guide)
+                .Include(t => t.Travelers)
+                .FirstOrDefaultAsync(t => t.Id == tripId);
         }
+
 
         public async Task AddTrip(Trip trip)
         {

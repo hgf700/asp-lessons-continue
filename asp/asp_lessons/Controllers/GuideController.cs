@@ -2,6 +2,7 @@
 using aspapp.Data.Models;
 using aspapp.Data.Repositories;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace aspapp.Controllers
 {
@@ -17,9 +18,10 @@ namespace aspapp.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var guides = await _guideRepository.GetAllGuides();
+            var guides = await _guideRepository.GetAllGuides().ToListAsync();
             return View(guides);
         }
+
 
         [HttpGet]
         public IActionResult Create()

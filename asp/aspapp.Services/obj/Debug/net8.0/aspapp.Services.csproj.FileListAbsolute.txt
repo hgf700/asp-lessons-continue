@@ -22,3 +22,7 @@ C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Services\obj\D
 C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Services\obj\Debug\net8.0\refint\aspapp.Services.dll
 C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Services\obj\Debug\net8.0\aspapp.Services.pdb
 C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Services\obj\Debug\net8.0\ref\aspapp.Services.dll
+C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Services\obj\Debug\net8.0\aspapp.Services.csproj.AssemblyReference.cache
+C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Services\bin\Debug\net8.0\aspapp.Data.dll
+C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Services\bin\Debug\net8.0\aspapp.Data.pdb
+C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Services\obj\Debug\net8.0\aspapp.S.24B7100E.Up2Date

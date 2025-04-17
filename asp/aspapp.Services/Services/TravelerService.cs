@@ -17,9 +17,9 @@ namespace aspapp.Services.Services
             _travelerRepository = travelerRepository;
         }
 
-        public async Task<IEnumerable<Traveler>> GetAllTravelers()
+        public IQueryable<Traveler> GetAllTravelers()
         {
-            return await _travelerRepository.GetAllTravelers();
+            return _travelerRepository.GetAllTravelers();
         }
 
         public async Task<Traveler> GetTravelerById(int travelerId)

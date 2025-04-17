@@ -9,7 +9,7 @@ namespace aspapp.Services.Services
 {
     public interface IGuideService
     {
-        Task<IEnumerable<Guide>> GetAllGuides();
+        IQueryable<Guide> GetAllGuides();
         Task<Guide> GetGuideDetails(int guideId);
         Task AddGuide(Guide guide);
         Task UpdateGuide(Guide guide);

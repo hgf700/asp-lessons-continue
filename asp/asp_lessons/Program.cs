@@ -1,7 +1,13 @@
 using aspapp.Data; // Upewnij siê, ¿e masz przestrzeñ nazw 'Data' tutaj
 using aspapp.Data.Models;
 using aspapp.Data.Repositories;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using aspapp.Data.Models.Validator;
+using FluentValidation;
+using AutoMapper;
+using System.Reflection;
+using aspapp.Data.Models.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +21,15 @@ builder.Services.AddScoped<IGuideRepository, GuideRepository>();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddValidatorsFromAssemblyContaining<TripViewModelValidator>();
+
+//builder.Services.AddValidatorsFromAssemblyContaining<TravelerViewModelValidator>();
+
+//builder.Services.AddValidatorsFromAssemblyContaining<GuideViewModelValidator>();
+
+var configuration = new MapperConfiguration(cfg => cfg.AddMaps(typeof(TripMapper).Assembly));
+var mapper = new Mapper(configuration);
 
 var app = builder.Build();
 

@@ -14,9 +14,9 @@ namespace aspapp.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Guide>> GetAllGuides()
+        public IQueryable<Guide> GetAllGuides()
         {
-            return await _context.Guides.ToListAsync();
+            return _context.Guides;
         }
 
         public async Task<Guide> GetGuideById(int guideId)

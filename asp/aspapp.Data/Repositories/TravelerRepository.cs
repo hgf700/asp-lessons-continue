@@ -14,9 +14,9 @@ namespace aspapp.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Traveler>> GetAllTravelers()
+        public IQueryable<Traveler> GetAllTravelers()
         {
-            return await _context.Travelers.ToListAsync();
+            return _context.Travelers;
         }
 
         public async Task<Traveler> GetTravelerById(int travelerId)

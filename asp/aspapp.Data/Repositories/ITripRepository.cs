@@ -6,7 +6,7 @@ namespace aspapp.Data.Repositories
 {
     public interface ITripRepository
     {
-        Task<IEnumerable<Trip>> GetAllTrips();
+        IQueryable<Trip> GetAllTrips();
         Task<Trip> GetTripById(int tripId);
         Task AddTrip(Trip trip);
         Task UpdateTrip(Trip trip);

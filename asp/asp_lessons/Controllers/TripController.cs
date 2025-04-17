@@ -2,7 +2,9 @@
 using aspapp.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using aspapp.Data.Models.VM;
 
 namespace aspapp.Controllers
 {
@@ -20,33 +22,45 @@ namespace aspapp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateTrip()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Guides = new SelectList(await _guideRepository.GetAllGuides(), "Id", "Firstname");
-            ViewBag.Travelers = new SelectList(await _travelerRepository.GetAllTravelers(), "Id", "Firstname");
+            var viewModel = new TripViewModel
+            {
+                Guides = await _guideRepository.GetAllGuides().ToListAsync(),
+                Travelers = await _travelerRepository.GetAllTravelers().ToListAsync()
+            };
 
-            return View();
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateTrip([Bind("Title,Description,GuideId,TravelerId")] Trip trip)
+        public async Task<IActionResult> Create(TripViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Guides = new SelectList(await _guideRepository.GetAllGuides(), "Id", "Firstname");
-                ViewBag.Travelers = new SelectList(await _travelerRepository.GetAllTravelers(), "Id", "Firstname");
-                return View(trip);
+                // Przekaż dane do widoku w przypadku nieprawidłowego formularza
+                model.Guides = await _guideRepository.GetAllGuides().ToListAsync();
+                model.Travelers = await _travelerRepository.GetAllTravelers().ToListAsync();
+                return View(model);
             }
 
+            var trip = new Trip
+            {
+                Title = model.Title,
+                Description = model.Description,
+                GuideId = model.GuideId,
+                TravelerId = model.TravelerId
+            };
+
             await _tripRepository.AddTrip(trip);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));  // Przekierowanie na stronę główną
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var trips = await _tripRepository.GetAllTrips();
+            var trips =  _tripRepository.GetAllTrips().ToListAsync();
             return View(trips);
         }
 
@@ -59,22 +73,44 @@ namespace aspapp.Controllers
                 return NotFound();
             }
 
-            ViewBag.Guides = new SelectList(await _guideRepository.GetAllGuides(), "Id", "Firstname");
-            ViewBag.Travelers = new SelectList(await _travelerRepository.GetAllTravelers(), "Id", "Firstname");
+            var viewModel = new TripViewModel
+            {
+                Id = trip.Id,
+                Title = trip.Title,
+                Description = trip.Description,
+                GuideId = trip.GuideId,
+                TravelerId = trip.TravelerId,
+                Guides = await _guideRepository.GetAllGuides().ToListAsync(),  
+                Travelers = await _travelerRepository.GetAllTravelers().ToListAsync()  
+            };
 
-            return View(trip);
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTrip(int id, [Bind("Title,Description,GuideId,TravelerId")] Trip trip)
+        public async Task<IActionResult> EditTrip(int id, TripViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Guides = new SelectList(await _guideRepository.GetAllGuides(), "Id", "Firstname");
-                ViewBag.Travelers = new SelectList(await _travelerRepository.GetAllTravelers(), "Id", "Firstname");
-                return View(trip);
+                // Pobieramy pełne listy Guide i Traveler
+                model.Guides = await _guideRepository.GetAllGuides().ToListAsync();
+                model.Travelers = await _travelerRepository.GetAllTravelers().ToListAsync();
+
+                return View(model);
             }
+
+            var trip = await _tripRepository.GetTripById(id);
+            if (trip == null)
+            {
+                return NotFound();
+            }
+
+            // Aktualizujemy dane podróży
+            trip.Title = model.Title;
+            trip.Description = model.Description;
+            trip.GuideId = model.GuideId;
+            trip.TravelerId = model.TravelerId;
 
             await _tripRepository.UpdateTrip(trip);
             return RedirectToAction(nameof(Index));

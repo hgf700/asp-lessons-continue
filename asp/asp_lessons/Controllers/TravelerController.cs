@@ -4,6 +4,7 @@ using aspapp.Data.Repositories;
 using aspapp.Services.Services;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace aspapp.Controllers
 {
@@ -21,7 +22,10 @@ namespace aspapp.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var travelers = await _travelerService.GetAllTravelers();
+            var travelers = await _travelerService.GetAllTravelers()
+                                                  .OrderBy(t => t.Firstname)
+                                                  .ToListAsync();
+
             return View(travelers);
         }
 

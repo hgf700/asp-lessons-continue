@@ -28,6 +28,3 @@ C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Data\obj\Debug
 C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Data\obj\Debug\net8.0\aspapp.Data.pdb
 C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Data\obj\Debug\net8.0\aspapp.Data.genruntimeconfig.cache
 C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Data\obj\Debug\net8.0\ref\aspapp.Data.dll
-C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Data\bin\Debug\net8.0\aspapp.Services.dll
-C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Data\bin\Debug\net8.0\aspapp.Services.pdb
-C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\aspapp.Data\obj\Debug\net8.0\aspapp.D.6A10A7D9.Up2Date

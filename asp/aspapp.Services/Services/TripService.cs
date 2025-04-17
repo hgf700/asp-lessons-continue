@@ -1,72 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using aspapp.Data.Models.VM;
 using aspapp.Data.Models;
 using aspapp.Data.Repositories;
-using Microsoft.EntityFrameworkCore;
+using aspapp.Services.Services;
+using AutoMapper;
 
-namespace aspapp.Services.Services
+public class TripService : ITripService
 {
+    private readonly IMapper _mapper;
+    private readonly ITripRepository _tripRepository;
 
-    public class TripService : ITripService
+    public TripService(ITripRepository tripRepository, IMapper mapper)
     {
-        private readonly ITripRepository _tripRepository;
+        _tripRepository = tripRepository;
+        _mapper = mapper;
+    }
 
-        public TripService(ITripRepository tripRepository)
+    public IQueryable<TripViewModel> GetAllTrips()
+    {
+        var trips = _tripRepository.GetAllTrips().ToList(); 
+        return _mapper.Map<List<TripViewModel>>(trips).AsQueryable();
+    }
+
+    public async Task<TripViewModel> GetTripById(int tripId)
+    {
+        var trip = await _tripRepository.GetTripById(tripId);
+        if (trip == null)
         {
-            _tripRepository = tripRepository;
+            throw new Exception("Trip not found");
+        }
+        return _mapper.Map<TripViewModel>(trip);
+    }
+
+    public async Task AddTrip(TripViewModel tripVm)
+    {
+        if (string.IsNullOrEmpty(tripVm.Title) ||
+            string.IsNullOrEmpty(tripVm.Description) ||
+            (tripVm.GuideId.HasValue && tripVm.GuideId <= 0))
+        {
+            throw new Exception("All fields are required.");
         }
 
-        public async Task<IEnumerable<Trip>> GetAllTrips()
+        var trip = _mapper.Map<Trip>(tripVm);
+        await _tripRepository.AddTrip(trip);
+    }
+
+    public async Task UpdateTrip(TripViewModel tripVm)
+    {
+        if (string.IsNullOrEmpty(tripVm.Title) ||
+            string.IsNullOrEmpty(tripVm.Description) ||
+            (tripVm.GuideId.HasValue && tripVm.GuideId <= 0))
         {
-            return await _tripRepository.GetAllTrips();
+            throw new Exception("All fields are required.");
         }
 
-        public async Task<Trip> GetTripById(int tripId)
+        var trip = _mapper.Map<Trip>(tripVm);
+        await _tripRepository.UpdateTrip(trip);
+    }
+
+    public async Task DeleteTrip(int tripId)
+    {
+        var trip = await _tripRepository.GetTripById(tripId);
+        if (trip == null)
         {
-            var trip = await _tripRepository.GetTripById(tripId);
-            if (trip == null)
-            {
-                throw new Exception("Trip not found");
-            }
-            return trip;
+            throw new Exception("Trip not found.");
         }
 
-        public async Task AddTrip(Trip trip)
-        {
-            if (string.IsNullOrEmpty(trip.Title) ||
-                string.IsNullOrEmpty(trip.Description) ||
-                (trip.GuideId.HasValue && trip.GuideId <= 0))
-            {
-                throw new Exception("All fields are required.");
-            }
-
-            await _tripRepository.AddTrip(trip);
-        }
-
-
-        public async Task UpdateTrip(Trip trip)
-        {
-            if (string.IsNullOrEmpty(trip.Title) ||
-                string.IsNullOrEmpty(trip.Description) ||
-                (trip.GuideId.HasValue && trip.GuideId <= 0))
-            {
-                throw new Exception("All fields are required.");
-            }
-
-            await _tripRepository.UpdateTrip(trip);
-        }
-
-        public async Task DeleteTrip(int tripId)
-        {
-            var trip = await _tripRepository.GetTripById(tripId);
-            if (trip == null)
-            {
-                throw new Exception("Trip not found.");
-            }
-
-            await _tripRepository.DeleteTrip(tripId);
-        }
+        await _tripRepository.DeleteTrip(tripId);
     }
 }

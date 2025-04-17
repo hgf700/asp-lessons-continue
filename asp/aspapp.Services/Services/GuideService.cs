@@ -17,9 +17,9 @@ namespace aspapp.Services.Services
             _guideRepository = guideRepository;
         }
 
-        public async Task<IEnumerable<Guide>> GetAllGuides()
+        public IQueryable<Guide> GetAllGuides()
         {
-            return await _guideRepository.GetAllGuides();
+            return _guideRepository.GetAllGuides();
         }
 
         public async Task<Guide> GetGuideDetails(int guideId)
