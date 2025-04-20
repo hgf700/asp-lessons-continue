@@ -8,6 +8,8 @@ using aspapp.Data.Models.VM;
 
 namespace aspapp.Controllers
 {
+    [ApiController]
+    [Route("trip")]
     public class TripController : Controller
     {
         private readonly ITripRepository _tripRepository;
@@ -21,7 +23,7 @@ namespace aspapp.Controllers
             _travelerRepository = travelerRepository;
         }
 
-        [HttpGet]
+        [HttpGet("create")]
         public async Task<IActionResult> Create()
         {
             var viewModel = new TripViewModel
@@ -33,7 +35,7 @@ namespace aspapp.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TripViewModel model)
         {
@@ -64,7 +66,7 @@ namespace aspapp.Controllers
             return View(trips);
         }
 
-        [HttpGet]
+        [HttpGet("edit")]
         public async Task<IActionResult> EditTrip(int id)
         {
             var trip = await _tripRepository.GetTripById(id);
@@ -87,7 +89,7 @@ namespace aspapp.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
+        [HttpPost("edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTrip(int id, TripViewModel model)
         {
@@ -116,7 +118,7 @@ namespace aspapp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
+        [HttpGet("delete")]
         public async Task<IActionResult> DeleteTrip(int id)
         {
             var trip = await _tripRepository.GetTripById(id);
@@ -127,7 +129,7 @@ namespace aspapp.Controllers
             return View(trip);
         }
 
-        [HttpPost, ActionName("DeleteTrip")]
+        [HttpPost ("delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteTripConfirmed(int id)
         {

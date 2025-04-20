@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace aspapp.Controllers
 {
+    [ApiController]
+    [Route("traveler")]
     public class TravelerController : Controller
     {
 
@@ -29,13 +31,13 @@ namespace aspapp.Controllers
             return View(travelers);
         }
 
-        [HttpGet]
+        [HttpGet("create")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Firstname,Lastname,Email,BirthDate")] Traveler traveler)
         {
@@ -47,7 +49,7 @@ namespace aspapp.Controllers
             return View(traveler);
         }
 
-        [HttpGet]
+        [HttpGet("edit")]
         public async Task<IActionResult> Edit(int id)
         {
             var traveler = await _travelerService.GetTravelerById(id);
@@ -58,7 +60,7 @@ namespace aspapp.Controllers
             return View(traveler);
         }
 
-        [HttpPost]
+        [HttpPost("edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TravelerId,Firstname,Lastname,Email,BirthDate")] Traveler traveler)
         {
@@ -76,7 +78,7 @@ namespace aspapp.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("delete")]
         public async Task<IActionResult> Delete(int id)
         {
             var traveler = await _travelerService.GetTravelerById(id);
@@ -87,7 +89,7 @@ namespace aspapp.Controllers
             return View(traveler);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace aspapp.Controllers
 {
+    [ApiController]
+    [Route("guide")]
     public class GuideController : Controller
     {
         private readonly IGuideRepository _guideRepository;
@@ -23,13 +25,13 @@ namespace aspapp.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("create")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Firstname,Lastname,Email,BirthDate")] Guide guide)
         {
@@ -41,7 +43,7 @@ namespace aspapp.Controllers
             return View(guide);
         }
 
-        [HttpGet]
+        [HttpGet("edit")]
         public async Task<IActionResult> Edit(int id)
         {
             var guide = await _guideRepository.GetGuideById(id);
@@ -52,7 +54,7 @@ namespace aspapp.Controllers
             return View(guide);
         }
 
-        [HttpPost]
+        [HttpPost("edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("GuideId,Firstname,Lastname,Email,BirthDate")] Guide guide)
         {
@@ -69,7 +71,7 @@ namespace aspapp.Controllers
             return View(guide);
         }
 
-        [HttpGet]
+        [HttpGet("delete")]
         public async Task<IActionResult> Delete(int id)
         {
             var guide = await _guideRepository.GetGuideById(id);
@@ -80,7 +82,7 @@ namespace aspapp.Controllers
             return View(guide);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
