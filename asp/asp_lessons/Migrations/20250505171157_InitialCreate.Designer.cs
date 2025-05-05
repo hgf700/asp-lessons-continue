@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using aspapp.Data.Models;
+using aspapp.Models;
 
 #nullable disable
 
-namespace aspapp.Data.Migrations
+namespace aspapp.Migrations
 {
     [DbContext(typeof(trip_context))]
-    partial class trip_contextModelSnapshot : ModelSnapshot
+    [Migration("20250505171157_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace aspapp.Data.Migrations
                     b.ToTable("TripTraveler");
                 });
 
-            modelBuilder.Entity("aspapp.Data.Models.Guide", b =>
+            modelBuilder.Entity("aspapp.Models.Guide", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +68,7 @@ namespace aspapp.Data.Migrations
                     b.ToTable("Guides");
                 });
 
-            modelBuilder.Entity("aspapp.Data.Models.Traveler", b =>
+            modelBuilder.Entity("aspapp.Models.Traveler", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,7 +96,7 @@ namespace aspapp.Data.Migrations
                     b.ToTable("Travelers");
                 });
 
-            modelBuilder.Entity("aspapp.Data.Models.Trip", b =>
+            modelBuilder.Entity("aspapp.Models.Trip", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,27 +129,27 @@ namespace aspapp.Data.Migrations
 
             modelBuilder.Entity("TripTraveler", b =>
                 {
-                    b.HasOne("aspapp.Data.Models.Traveler", null)
+                    b.HasOne("aspapp.Models.Traveler", null)
                         .WithMany()
                         .HasForeignKey("TravelerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("aspapp.Data.Models.Trip", null)
+                    b.HasOne("aspapp.Models.Trip", null)
                         .WithMany()
                         .HasForeignKey("TripId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("aspapp.Data.Models.Trip", b =>
+            modelBuilder.Entity("aspapp.Models.Trip", b =>
                 {
-                    b.HasOne("aspapp.Data.Models.Guide", "Guide")
+                    b.HasOne("aspapp.Models.Guide", "Guide")
                         .WithMany("Trips")
                         .HasForeignKey("GuideId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("aspapp.Data.Models.Traveler", "Traveler")
+                    b.HasOne("aspapp.Models.Traveler", "Traveler")
                         .WithMany()
                         .HasForeignKey("TravelerId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -156,7 +159,7 @@ namespace aspapp.Data.Migrations
                     b.Navigation("Traveler");
                 });
 
-            modelBuilder.Entity("aspapp.Data.Models.Guide", b =>
+            modelBuilder.Entity("aspapp.Models.Guide", b =>
                 {
                     b.Navigation("Trips");
                 });
