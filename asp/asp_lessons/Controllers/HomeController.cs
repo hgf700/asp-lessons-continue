@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using aspapp.Data.Models;
-using aspapp.Pages.Home;
-using aspapp.Pages.Trip;
+using aspapp.Models;
+using aspapp.Repositories;
+using aspapp.Services;
 
-namespace WebAppActions.Controllers
+namespace aspapp.Controllers
 {
     public class HomeController : Controller
     {

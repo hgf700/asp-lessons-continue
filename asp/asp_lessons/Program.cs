@@ -1,13 +1,17 @@
-using aspapp.Data; // Upewnij siê, ¿e masz przestrzeñ nazw 'Data' tutaj
-using aspapp.Data.Models;
-using aspapp.Data.Repositories;
+using aspapp.Models;
+using aspapp.Repositories;
+using aspapp.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
-using aspapp.Data.Models.Validator;
 using FluentValidation;
 using AutoMapper;
 using System.Reflection;
-using aspapp.Data.Models.Mapper;
+using aspapp.Models;
+using aspapp.Repositories;
+using aspapp.Services;
+using aspapp.Models.Mapper;
+using aspapp.Models.Validator;
+using aspapp.Models.VM;
 
 var builder = WebApplication.CreateBuilder(args);
 

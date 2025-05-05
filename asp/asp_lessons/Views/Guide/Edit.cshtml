@@ -1,4 +1,4 @@
-﻿@model aspapp.Data.Models.Guide
+﻿@model aspapp.Models.Guide
 
 @{
     ViewData["Title"] = "Edit";
@@ -33,7 +33,7 @@
 
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <select asp-for="Title" class="form-control" asp-items="Html.GetEnumSelectList<aspapp.Data.Models.TitleEnum>()">
+                <select asp-for="Title" class="form-control" asp-items="Html.GetEnumSelectList<aspapp.Models.TitleEnum>()">
                     <option value="">Select title ...</option>
                 </select>
                 <span asp-validation-for="Title" class="text-danger"></span>

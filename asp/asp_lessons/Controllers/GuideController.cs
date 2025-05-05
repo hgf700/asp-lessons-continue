@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using aspapp.Data.Models;
-using aspapp.Data.Repositories;
+using aspapp.Models;
+using aspapp.Repositories;
+using aspapp.Services;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 

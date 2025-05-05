@@ -1,10 +1,11 @@
-﻿using aspapp.Data.Models;
-using aspapp.Data.Repositories;
+﻿using aspapp.Models;
+using aspapp.Models.VM;
+using aspapp.Repositories;
+using aspapp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using aspapp.Data.Models.VM;
 
 namespace aspapp.Controllers
 {
