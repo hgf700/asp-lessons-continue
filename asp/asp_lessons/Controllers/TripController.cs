@@ -2,6 +2,7 @@
 using aspapp.Models.VM;
 using aspapp.Repositories;
 using aspapp.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,20 +10,28 @@ using System.Threading.Tasks;
 
 namespace aspapp.Controllers
 {
-    [ApiController]
     [Route("trip")]
     public class TripController : Controller
     {
         private readonly ITripRepository _tripRepository;
         private readonly IGuideRepository _guideRepository;
         private readonly ITravelerRepository _travelerRepository;
+        private readonly ILogger<TripController> _logger;
+        private readonly IMapper _mapper;
 
-        public TripController(ITripRepository tripRepository, IGuideRepository guideRepository, ITravelerRepository travelerRepository)
+        public TripController(ITripRepository tripRepository,
+                              IGuideRepository guideRepository,
+                              ITravelerRepository travelerRepository,
+                              ILogger<TripController> logger,
+                              IMapper mapper)
         {
             _tripRepository = tripRepository;
             _guideRepository = guideRepository;
             _travelerRepository = travelerRepository;
+            _logger = logger;
+            _mapper = mapper;
         }
+
 
         [HttpGet("create")]
         public async Task<IActionResult> Create()
@@ -40,25 +49,32 @@ namespace aspapp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TripViewModel model)
         {
+            _logger.LogInformation("_LOGGER_ Wywołano akcję Create");
+
             if (!ModelState.IsValid)
             {
-                // Przekaż dane do widoku w przypadku nieprawidłowego formularza
+                _logger.LogWarning("_LOGGER_ ModelState jest niepoprawny");
+
                 model.Guides = await _guideRepository.GetAllGuides().ToListAsync();
                 model.Travelers = await _travelerRepository.GetAllTravelers().ToListAsync();
                 return View(model);
             }
 
-            var trip = new Trip
-            {
-                Title = model.Title,
-                Description = model.Description,
-                GuideId = model.GuideId,
-                TravelerId = model.TravelerId
-            };
+            _logger.LogInformation("_LOGGER_ Tworzenie nowej podróży. GuideId: {GuideId}, TravelerId: {TravelerId}",
+                                   model.GuideId, model.TravelerId);
+
+
+            var trip = _mapper.Map<Trip>(model);
+
+            //var config = new MapperConfiguration(cfg => cfg.AddProfile<TripMapper>());
+            //var mapper = config.CreateMapper();
+            //var trip = mapper.Map<Trip>(model);
+
 
             await _tripRepository.AddTrip(trip);
-            return RedirectToAction(nameof(Index));  // Przekierowanie na stronę główną
+            return RedirectToAction(nameof(Index));
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -81,8 +97,8 @@ namespace aspapp.Controllers
                 Id = trip.Id,
                 Title = trip.Title,
                 Description = trip.Description,
-                GuideId = trip.GuideId,
-                TravelerId = trip.TravelerId,
+                GuideId = trip.GuideId.Value,
+                TravelerId = trip.TravelerId.Value,
                 Guides = await _guideRepository.GetAllGuides().ToListAsync(),  
                 Travelers = await _travelerRepository.GetAllTravelers().ToListAsync()  
             };

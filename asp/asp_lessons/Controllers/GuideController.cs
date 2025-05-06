@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace aspapp.Controllers
 {
-    [ApiController]
     [Route("guide")]
     public class GuideController : Controller
     {

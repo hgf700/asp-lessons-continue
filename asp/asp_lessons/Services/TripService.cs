@@ -1,7 +1,7 @@
 ﻿using aspapp.Models;
 using aspapp.Repositories;
 using aspapp.Services;
-using aspapp.Models.Mapper;
+
 using aspapp.Models.Validator;
 using aspapp.Models.VM;
 using AutoMapper;
@@ -37,7 +37,7 @@ public class TripService : ITripService
     {
         if (string.IsNullOrEmpty(tripVm.Title) ||
             string.IsNullOrEmpty(tripVm.Description) ||
-            (tripVm.GuideId.HasValue && tripVm.GuideId <= 0))
+            tripVm.GuideId <= 0 || tripVm.TravelerId <= 0)
         {
             throw new Exception("All fields are required.");
         }
@@ -50,7 +50,7 @@ public class TripService : ITripService
     {
         if (string.IsNullOrEmpty(tripVm.Title) ||
             string.IsNullOrEmpty(tripVm.Description) ||
-            (tripVm.GuideId.HasValue && tripVm.GuideId <= 0))
+            tripVm.GuideId <= 0 || tripVm.TravelerId <= 0)
         {
             throw new Exception("All fields are required.");
         }

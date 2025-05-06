@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace aspapp.Controllers
 {
-    [ApiController]
     [Route("traveler")]
     public class TravelerController : Controller
     {

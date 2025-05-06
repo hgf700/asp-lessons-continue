@@ -4,7 +4,7 @@
 }
 
 <h2>Create Traveler</h2>
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="application/x-www-form-urlencoded">
     @Html.AntiForgeryToken()
     <div class="form-group">
         <label asp-for="Firstname" class="control-label"></label>

@@ -1,19 +1,20 @@
 using aspapp.Models;
 using aspapp.Repositories;
 using aspapp.Services;
-using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
-using AutoMapper;
-using System.Reflection;
-using aspapp.Models;
-using aspapp.Repositories;
-using aspapp.Services;
-using aspapp.Models.Mapper;
 using aspapp.Models.Validator;
-using aspapp.Models.VM;
+using Serilog;
+using AutoMapper;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 // Rejestracja DbContext z po³¹czeniem
 builder.Services.AddDbContext<trip_context>(options =>
@@ -24,16 +25,15 @@ builder.Services.AddScoped<ITravelerRepository, TravelerRepository>();
 builder.Services.AddScoped<IGuideRepository, GuideRepository>();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 
+builder.Services.AddScoped<ITravelerService, TravelerService>();
+builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<IGuideService, GuideService>();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddValidatorsFromAssemblyContaining<TripViewModelValidator>();
 
-//builder.Services.AddValidatorsFromAssemblyContaining<TravelerViewModelValidator>();
-
-//builder.Services.AddValidatorsFromAssemblyContaining<GuideViewModelValidator>();
-
-var configuration = new MapperConfiguration(cfg => cfg.AddMaps(typeof(TripMapper).Assembly));
-var mapper = new Mapper(configuration);
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
