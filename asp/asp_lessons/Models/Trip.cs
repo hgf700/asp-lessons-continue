@@ -3,18 +3,17 @@
     public class Trip
     {
         public int Id { get; set; }
-        public string Title { get; set; } = string.Empty; // Title of the trip
-        public string Description { get; set; } = string.Empty; // Description of the trip
 
-        // Foreign key to Guide
+        public string Title { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
+
+        // Jeden przewodnik
         public int? GuideId { get; set; }
-        public Guide? Guide { get; set; } // Navigation property to Guide
 
-        // Foreign key to Traveler
-        public int? TravelerId { get; set; }
-        public Traveler? Traveler { get; set; } // Navigation property to Traveler
+        public Guide? Guide { get; set; }
 
-        // Many-to-many relationship: A Trip can have many Travelers
+        // Lista podróżników (many-to-many)
         public List<Traveler> Travelers { get; set; } = new();
     }
 }

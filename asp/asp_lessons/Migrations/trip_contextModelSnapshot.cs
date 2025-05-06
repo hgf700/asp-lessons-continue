@@ -112,14 +112,9 @@ namespace aspapp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TravelerId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GuideId");
-
-                    b.HasIndex("TravelerId");
 
                     b.ToTable("Trips");
                 });
@@ -146,14 +141,7 @@ namespace aspapp.Migrations
                         .HasForeignKey("GuideId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("aspapp.Models.Traveler", "Traveler")
-                        .WithMany()
-                        .HasForeignKey("TravelerId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.Navigation("Guide");
-
-                    b.Navigation("Traveler");
                 });
 
             modelBuilder.Entity("aspapp.Models.Guide", b =>

@@ -1,11 +1,11 @@
 ﻿using aspapp.Models;
 using aspapp.Models.VM;
 using aspapp.Repositories;
-using aspapp.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace aspapp.Controllers
@@ -19,11 +19,12 @@ namespace aspapp.Controllers
         private readonly ILogger<TripController> _logger;
         private readonly IMapper _mapper;
 
-        public TripController(ITripRepository tripRepository,
-                              IGuideRepository guideRepository,
-                              ITravelerRepository travelerRepository,
-                              ILogger<TripController> logger,
-                              IMapper mapper)
+        public TripController(
+            ITripRepository tripRepository,
+            IGuideRepository guideRepository,
+            ITravelerRepository travelerRepository,
+            ILogger<TripController> logger,
+            IMapper mapper)
         {
             _tripRepository = tripRepository;
             _guideRepository = guideRepository;
@@ -31,7 +32,6 @@ namespace aspapp.Controllers
             _logger = logger;
             _mapper = mapper;
         }
-
 
         [HttpGet("create")]
         public async Task<IActionResult> Create()
@@ -49,37 +49,35 @@ namespace aspapp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TripViewModel model)
         {
-            _logger.LogInformation("_LOGGER_ Wywołano akcję Create");
+            _logger.LogInformation("Wywołano akcję Create");
 
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("_LOGGER_ ModelState jest niepoprawny");
-
+                _logger.LogWarning("ModelState jest niepoprawny");
                 model.Guides = await _guideRepository.GetAllGuides().ToListAsync();
                 model.Travelers = await _travelerRepository.GetAllTravelers().ToListAsync();
                 return View(model);
             }
 
-            _logger.LogInformation("_LOGGER_ Tworzenie nowej podróży. GuideId: {GuideId}, TravelerId: {TravelerId}",
-                                   model.GuideId, model.TravelerId);
-
-
-            var trip = _mapper.Map<Trip>(model);
-
-            //var config = new MapperConfiguration(cfg => cfg.AddProfile<TripMapper>());
-            //var mapper = config.CreateMapper();
-            //var trip = mapper.Map<Trip>(model);
-
+            var trip = new Trip
+            {
+                Title = model.Title,
+                Description = model.Description,
+                GuideId = model.GuideId,
+                Travelers = await _travelerRepository
+                    .GetAllTravelers()
+                    .Where(t => model.TravelerIds.Contains(t.Id))
+                    .ToListAsync()
+            };
 
             await _tripRepository.AddTrip(trip);
             return RedirectToAction(nameof(Index));
         }
 
-
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var trips =  _tripRepository.GetAllTrips().ToListAsync();
+            var trips = await _tripRepository.GetAllTrips().ToListAsync();
             return View(trips);
         }
 
@@ -97,10 +95,10 @@ namespace aspapp.Controllers
                 Id = trip.Id,
                 Title = trip.Title,
                 Description = trip.Description,
-                GuideId = trip.GuideId.Value,
-                TravelerId = trip.TravelerId.Value,
-                Guides = await _guideRepository.GetAllGuides().ToListAsync(),  
-                Travelers = await _travelerRepository.GetAllTravelers().ToListAsync()  
+                GuideId = trip.GuideId,
+                TravelerIds = trip.Travelers.Select(t => t.Id).ToList(),
+                Guides = await _guideRepository.GetAllGuides().ToListAsync(),
+                Travelers = await _travelerRepository.GetAllTravelers().ToListAsync()
             };
 
             return View(viewModel);
@@ -112,10 +110,8 @@ namespace aspapp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Pobieramy pełne listy Guide i Traveler
                 model.Guides = await _guideRepository.GetAllGuides().ToListAsync();
                 model.Travelers = await _travelerRepository.GetAllTravelers().ToListAsync();
-
                 return View(model);
             }
 
@@ -125,11 +121,13 @@ namespace aspapp.Controllers
                 return NotFound();
             }
 
-            // Aktualizujemy dane podróży
             trip.Title = model.Title;
             trip.Description = model.Description;
             trip.GuideId = model.GuideId;
-            trip.TravelerId = model.TravelerId;
+            trip.Travelers = await _travelerRepository
+                .GetAllTravelers()
+                .Where(t => model.TravelerIds.Contains(t.Id))
+                .ToListAsync();
 
             await _tripRepository.UpdateTrip(trip);
             return RedirectToAction(nameof(Index));
@@ -143,10 +141,11 @@ namespace aspapp.Controllers
             {
                 return NotFound();
             }
+
             return View(trip);
         }
 
-        [HttpPost ("delete")]
+        [HttpPost("delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteTripConfirmed(int id)
         {

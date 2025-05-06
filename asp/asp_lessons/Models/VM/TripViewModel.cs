@@ -19,8 +19,8 @@ namespace aspapp.Models.VM
         [Required(ErrorMessage = "Id przewodnika musi być większe niż 0.")]
         public int? GuideId { get; set; }
 
-        [Required(ErrorMessage = "Id podróżnika musi być większe niż 0.")]
-        public int? TravelerId { get; set; }
+        [Required(ErrorMessage = "Wybierz przynajmniej jednego podróżnika.")]
+        public List<int> TravelerIds { get; set; } = new();
 
         public List<Guide> Guides { get; set; }
 

@@ -26,8 +26,8 @@ builder.Services.AddScoped<IGuideRepository, GuideRepository>();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 
 builder.Services.AddScoped<ITravelerService, TravelerService>();
-builder.Services.AddScoped<ITripService, TripService>();
-builder.Services.AddScoped<IGuideService, GuideService>();
+//builder.Services.AddScoped<ITripService, TripService>();
+//builder.Services.AddScoped<IGuideService, GuideService>();
 
 builder.Services.AddControllersWithViews();
 

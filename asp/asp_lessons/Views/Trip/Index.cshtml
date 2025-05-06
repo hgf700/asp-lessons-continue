@@ -6,13 +6,14 @@
 
 <h2>Lista Wycieczek</h2>
 
-<table class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
             <th>Tytuł</th>
             <th>Opis</th>
             <th>Przewodnik</th>
-            <th>Podróżnik</th>
+            <th>Podróżnicy</th>
+            <th>Akcje</th>
         </tr>
     </thead>
     <tbody>
@@ -21,11 +22,29 @@
             <tr>
                 <td>@trip.Title</td>
                 <td>@trip.Description</td>
-                <td>@(trip.Guide != null ? trip.Guide.Firstname : "Brak przewodnika")</td>
-                <td>@(trip.Traveler != null ? trip.Traveler.Firstname : "Brak podróżnika")</td>
+                <td>@(trip.Guide?.Firstname ?? "Brak")</td>
+                <td>
+                    @if (trip.Travelers != null && trip.Travelers.Any())
+                    {
+                        <ul>
+                            @foreach (var traveler in trip.Travelers)
+                            {
+                                <li>@traveler.Firstname</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>Brak</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="EditTrip" asp-route-id="@trip.Id" class="btn btn-sm btn-warning">Edytuj</a>
+                    <a asp-action="DeleteTrip" asp-route-id="@trip.Id" class="btn btn-sm btn-danger">Usuń</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
-<a asp-action="CreateTrip" class="btn btn-primary">Dodaj nową wycieczkę</a>
+<a asp-action="Create" class="btn btn-primary">Dodaj nową wycieczkę</a>
