@@ -6,9 +6,8 @@
         public string Firstname { get; set; } = string.Empty;
         public string Lastname { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        // Lista podróży w widoku (jeśli chcesz je wyświetlać)
-        public List<TripViewModel> Trips { get; set; } = new();
+        public List<TripViewModel>? Trips { get; set; } // Opcjonalne, jeśli potrzebne
     }
 }

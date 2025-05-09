@@ -8,7 +8,6 @@
         public string Email { get; set; } = string.Empty;
         public DateTime BirthDate { get; set; }
 
-        // Lista podróży związanych z podróżnikiem (w wersji widoku)
-        public List<TripViewModel> Trips { get; set; } = new();
+        public List<TripViewModel>? Trips { get; set; } // Opcjonalne, jeśli potrzebne
     }
 }

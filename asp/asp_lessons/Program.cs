@@ -17,7 +17,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 // Rejestracja DbContext z po³¹czeniem
-builder.Services.AddDbContext<trip_context>(options =>
+builder.Services.AddDbContext<TripContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Rejestracja repozytoriów i serwisów

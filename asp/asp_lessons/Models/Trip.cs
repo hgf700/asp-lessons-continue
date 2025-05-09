@@ -7,8 +7,11 @@
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
+        // FK to Guide
         public int GuideId { get; set; }
+        public Guide Guide { get; set; } = null!;
+
+        // Many-to-many relationship with Travelers
         public ICollection<Traveler> Travelers { get; set; } = new List<Traveler>();
-        public ICollection<Guide> Guides { get; set; } = new List<Guide>();
     }
 }

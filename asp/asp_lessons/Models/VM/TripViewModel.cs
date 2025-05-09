@@ -6,8 +6,11 @@
         public string Destination { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int GuideId { get; set; }
-        public List<TravelerViewModel> Travelers { get; set; } = new();
-        public List<GuideViewModel> Guides { get; set; } = new(); // do wyboru w formularzu
+
+        public int GuideId { get; set; } // Wybrany przewodnik
+        public GuideViewModel? Guide { get; set; }
+
+        public List<TravelerViewModel> Travelers { get; set; } = new(); // Lista wybranych podróżników
+        public List<GuideViewModel> Guides { get; set; } = new();       // Lista przewodników do wyboru w formularzu
     }
 }

@@ -8,9 +8,9 @@ namespace aspapp.Repositories
 {
     public class TravelerRepository : ITravelerRepository
     {
-        private readonly trip_context _context;
+        private readonly TripContext _context;
 
-        public TravelerRepository(trip_context context)
+        public TravelerRepository(TripContext context)
         {
             _context = context;
         }

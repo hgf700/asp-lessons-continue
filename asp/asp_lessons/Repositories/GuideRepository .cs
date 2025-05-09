@@ -1,6 +1,5 @@
 ﻿using aspapp.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,9 +7,9 @@ namespace aspapp.Repositories
 {
     public class GuideRepository : IGuideRepository
     {
-        private readonly trip_context _context;
+        private readonly TripContext _context;
 
-        public GuideRepository(trip_context context)
+        public GuideRepository(TripContext context)
         {
             _context = context;
         }
@@ -26,7 +25,7 @@ namespace aspapp.Repositories
                 query = query.Include(g => g.Trips);
             }
 
-            return query.AsNoTracking();
+            return query.AsNoTracking(); // No tracking for better performance on read-only scenarios
         }
 
         // Pobiera przewodnika po ID (wraz z powiązanymi wycieczkami)
@@ -40,14 +39,22 @@ namespace aspapp.Repositories
                 query = query.Include(g => g.Trips);
             }
 
-            return await query.AsNoTracking()
+            return await query.AsNoTracking() // No tracking for better performance
                                .FirstOrDefaultAsync(g => g.GuideId == guideId);
+        }
+
+        // Implementacja metody GetGuideByEmail
+        public async Task<Guide?> GetGuideByEmail(string email)
+        {
+            return await _context.Guides
+                .AsNoTracking() // No tracking for better performance
+                .FirstOrDefaultAsync(g => g.Email == email);
         }
 
         // Dodaje nowego przewodnika
         public async Task AddGuide(Guide guide)
         {
-            // Sprawdzamy, czy przewodnik o tym samym emailu już istnieje
+            // Check if a guide with the same email already exists
             var existingGuide = await _context.Guides
                 .FirstOrDefaultAsync(g => g.Email == guide.Email);
 
@@ -56,22 +63,24 @@ namespace aspapp.Repositories
                 throw new InvalidOperationException("Przewodnik z tym emailem już istnieje.");
             }
 
+            // Add the guide and save changes in one go
             await _context.Guides.AddAsync(guide);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Save changes after addition
         }
 
         // Aktualizuje dane przewodnika po sprawdzeniu istnienia
         public async Task UpdateGuide(Guide guide)
         {
+            // Check if the guide exists
             var existingGuide = await _context.Guides.FindAsync(guide.GuideId);
             if (existingGuide == null)
             {
                 throw new KeyNotFoundException("Przewodnik nie został znaleziony.");
             }
 
-            // Zaktualizowanie wartości istniejącego przewodnika
+            // Update existing guide data
             _context.Entry(existingGuide).CurrentValues.SetValues(guide);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Save changes
         }
 
         // Usuwa przewodnika
@@ -83,8 +92,9 @@ namespace aspapp.Repositories
                 throw new KeyNotFoundException("Przewodnik nie został znaleziony.");
             }
 
+            // Remove the guide and save changes
             _context.Guides.Remove(guide);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Save changes
         }
     }
 }

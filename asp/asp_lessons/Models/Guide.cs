@@ -9,6 +9,6 @@
         public string Title { get; set; }
 
         // Kolekcja podróży przypisanych do przewodnika
-        public ICollection<Trip> Trips { get; set; } = new List<Trip>();
+        public ICollection<Trip> Trips { get; set; } = new List<Trip>(); // One-to-many relationship with Trip
     }
 }

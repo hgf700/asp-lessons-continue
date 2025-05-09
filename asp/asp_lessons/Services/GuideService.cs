@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using aspapp.Models.VM;
 using aspapp.Models;
-using aspapp.Models.VM;
 using aspapp.Repositories;
 using AutoMapper;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace aspapp.Services
@@ -48,9 +46,16 @@ namespace aspapp.Services
             ValidateGuideViewModel(guideViewModel);
 
             // Check for valid email format
-            if (!IsValidEmail(guideViewModel.Email))
+            //if (!IsValidEmail(guideViewModel.Email))
+            //{
+            //    throw new ArgumentException("Invalid email format.");
+            //}
+
+            // Check if the email already exists
+            var existingGuide = await _guideRepository.GetGuideByEmail(guideViewModel.Email);
+            if (existingGuide != null)
             {
-                throw new ArgumentException("Invalid email format.");
+                throw new ArgumentException($"A guide with the email {guideViewModel.Email} already exists.");
             }
 
             var guide = _mapper.Map<Guide>(guideViewModel);
@@ -64,10 +69,10 @@ namespace aspapp.Services
             ValidateGuideViewModel(guideViewModel);
 
             // Check for valid email format
-            if (!IsValidEmail(guideViewModel.Email))
-            {
-                throw new ArgumentException("Invalid email format.");
-            }
+            //if (!IsValidEmail(guideViewModel.Email))
+            //{
+            //    throw new ArgumentException("Invalid email format.");
+            //}
 
             var guide = _mapper.Map<Guide>(guideViewModel);
 
@@ -75,6 +80,13 @@ namespace aspapp.Services
             if (existingGuide == null)
             {
                 throw new KeyNotFoundException($"Guide with Id {guide.GuideId} not found.");
+            }
+
+            // Check if the email is already in use by another guide
+            var duplicateGuide = await _guideRepository.GetGuideByEmail(guideViewModel.Email);
+            if (duplicateGuide != null && duplicateGuide.GuideId != guide.GuideId)
+            {
+                throw new ArgumentException($"A guide with the email {guideViewModel.Email} already exists.");
             }
 
             await _guideRepository.UpdateGuide(guide);
@@ -97,19 +109,25 @@ namespace aspapp.Services
         // Helper method to validate GuideViewModel
         private void ValidateGuideViewModel(GuideViewModel guideViewModel)
         {
-            if (string.IsNullOrEmpty(guideViewModel.Firstname) ||
-                string.IsNullOrEmpty(guideViewModel.Lastname) ||
-                string.IsNullOrEmpty(guideViewModel.Email))
+            if (string.IsNullOrEmpty(guideViewModel.Firstname))
             {
-                throw new ArgumentException("All fields are required.");
+                throw new ArgumentException("Firstname is required.");
+            }
+            if (string.IsNullOrEmpty(guideViewModel.Lastname))
+            {
+                throw new ArgumentException("Lastname is required.");
+            }
+            if (string.IsNullOrEmpty(guideViewModel.Email))
+            {
+                throw new ArgumentException("Email is required.");
             }
         }
 
         // Helper method to validate email format
-        private bool IsValidEmail(string email)
-        {
-            var emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-            return Regex.IsMatch(email, emailRegex);
-        }
+        //private bool IsValidEmail(string email)
+        //{
+        //    var emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+        //    return Regex.IsMatch(email, emailRegex);
+        //}
     }
 }

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<aspapp.Models.VM.GuideViewModel>
+
+@{
+    ViewData["Title"] = "Guide List";
+}
+
+<h1>Guide List</h1>
+
+<p>
+    <a href="@Url.Action("Create", "Guide")" class="btn btn-primary">Create New Guide</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Email</th>
+            <th>Title</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var guide in Model)
+        {
+            <tr>
+                <td>@guide.Firstname</td>
+                <td>@guide.Lastname</td>
+                <td>@guide.Email</td>
+                <td>@guide.Title</td>
+                <td>
+                    <!-- Add edit or delete links here, if required -->
+                    <a href="@Url.Action("Edit", "Guide", new { id = guide.GuideId })" class="btn btn-warning btn-sm">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

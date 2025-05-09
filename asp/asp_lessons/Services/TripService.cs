@@ -7,6 +7,7 @@ using aspapp.Models.VM;
 using aspapp.Models;
 using aspapp.Repositories;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace aspapp.Services
 {
@@ -29,14 +30,17 @@ namespace aspapp.Services
             _guideRepository = guideRepository;
         }
 
-        // Pobieranie wszystkich podróży
-        public IQueryable<TripViewModel> GetAllTrips()
+        public async Task<List<TripViewModel>> GetAllTrips()
         {
-            return _tripRepository.GetAllTrips()
-                                  .Select(trip => _mapper.Map<TripViewModel>(trip));
+            var trips = await _tripRepository.GetAllTrips()
+                .Include(t => t.Guide)
+                .Include(t => t.Travelers)
+                .ToListAsync();
+
+            // Map the trips to TripViewModel
+            return trips.Select(trip => _mapper.Map<TripViewModel>(trip)).ToList();
         }
 
-        // Pobieranie podróży po ID
         public async Task<TripViewModel> GetTripById(int tripId)
         {
             var trip = await _tripRepository.GetTripById(tripId);
@@ -46,32 +50,32 @@ namespace aspapp.Services
             return _mapper.Map<TripViewModel>(trip);
         }
 
-        // Dodawanie podróży
         public async Task AddTrip(TripViewModel tripViewModel)
         {
             ValidateTripViewModel(tripViewModel);
 
-            // Walidacja istnienia przewodników
-            foreach (var guideVM in tripViewModel.Guides)
-            {
-                var guide = await _guideRepository.GetGuideById(guideVM.GuideId);
-                if (guide == null)
-                    throw new KeyNotFoundException($"Guide with Id {guideVM.GuideId} not found.");
-            }
+            // Fetch the guide and travelers
+            var guide = await _guideRepository.GetGuideById(tripViewModel.GuideId);
+            if (guide == null)
+                throw new KeyNotFoundException($"Guide with Id {tripViewModel.GuideId} not found.");
 
-            // Walidacja istnienia podróżników
+            var travelers = new List<Traveler>();
             foreach (var travelerVM in tripViewModel.Travelers)
             {
                 var traveler = await _travelerRepository.GetTravelerById(travelerVM.TravelerId);
                 if (traveler == null)
                     throw new KeyNotFoundException($"Traveler with Id {travelerVM.TravelerId} not found.");
+
+                travelers.Add(traveler);
             }
 
             var trip = _mapper.Map<Trip>(tripViewModel);
+            trip.Guide = guide;
+            trip.Travelers = travelers;
+
             await _tripRepository.AddTrip(trip);
         }
 
-        // Aktualizacja podróży
         public async Task UpdateTrip(TripViewModel tripViewModel)
         {
             ValidateTripViewModel(tripViewModel);
@@ -80,27 +84,28 @@ namespace aspapp.Services
             if (existingTrip == null)
                 throw new KeyNotFoundException($"Trip with Id {tripViewModel.TripId} not found.");
 
-            // Walidacja istnienia przewodników
-            foreach (var guideVM in tripViewModel.Guides)
-            {
-                var guide = await _guideRepository.GetGuideById(guideVM.GuideId);
-                if (guide == null)
-                    throw new KeyNotFoundException($"Guide with Id {guideVM.GuideId} not found.");
-            }
+            // Fetch the guide and travelers
+            var guide = await _guideRepository.GetGuideById(tripViewModel.GuideId);
+            if (guide == null)
+                throw new KeyNotFoundException($"Guide with Id {tripViewModel.GuideId} not found.");
 
-            // Walidacja istnienia podróżników
+            var travelers = new List<Traveler>();
             foreach (var travelerVM in tripViewModel.Travelers)
             {
                 var traveler = await _travelerRepository.GetTravelerById(travelerVM.TravelerId);
                 if (traveler == null)
                     throw new KeyNotFoundException($"Traveler with Id {travelerVM.TravelerId} not found.");
+
+                travelers.Add(traveler);
             }
 
             var updatedTrip = _mapper.Map<Trip>(tripViewModel);
+            updatedTrip.Guide = guide;
+            updatedTrip.Travelers = travelers;
+
             await _tripRepository.UpdateTrip(updatedTrip);
         }
 
-        // Usuwanie podróży
         public async Task DeleteTrip(int tripId)
         {
             var trip = await _tripRepository.GetTripById(tripId);
@@ -110,7 +115,6 @@ namespace aspapp.Services
             await _tripRepository.DeleteTrip(tripId);
         }
 
-        // Walidacja danych podróży
         private void ValidateTripViewModel(TripViewModel viewModel)
         {
             var context = new ValidationContext(viewModel);

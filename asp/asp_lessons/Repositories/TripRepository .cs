@@ -9,31 +9,31 @@ namespace aspapp.Repositories
 {
     public class TripRepository : ITripRepository
     {
-        private readonly trip_context _context;
+        private readonly TripContext _context;
 
-        public TripRepository(trip_context context)
+        public TripRepository(TripContext context)
         {
             _context = context;
         }
 
-        // Pobiera wszystkie podróże z dołączonymi przewodnikami i podróżnikami
+        // Get all trips with the associated guide and travelers
         public IQueryable<Trip> GetAllTrips()
         {
             return _context.Trips
-                .Include(t => t.Guides)
+                .Include(t => t.Guide)
                 .Include(t => t.Travelers);
         }
 
-        // Pobiera jedną podróż po ID z dołączonymi kolekcjami
+        // Get a trip by ID with associated guide and travelers
         public async Task<Trip?> GetTripById(int id)
         {
             return await _context.Trips
-                .Include(t => t.Guides)
+                .Include(t => t.Guide)
                 .Include(t => t.Travelers)
                 .FirstOrDefaultAsync(t => t.TripId == id);
         }
 
-        // Dodaje nową podróż
+        // Add a new trip to the database
         public async Task AddTrip(Trip trip)
         {
             if (trip == null)
@@ -43,24 +43,29 @@ namespace aspapp.Repositories
             await _context.SaveChangesAsync();
         }
 
-        // Aktualizuje istniejącą podróż oraz powiązania
+        // Update an existing trip and its related entities
         public async Task UpdateTrip(Trip trip)
         {
             if (trip == null)
                 throw new ArgumentNullException(nameof(trip));
 
             var existingTrip = await _context.Trips
-                .Include(t => t.Guides)
+                .Include(t => t.Guide)
                 .Include(t => t.Travelers)
                 .FirstOrDefaultAsync(t => t.TripId == trip.TripId);
 
             if (existingTrip == null)
                 throw new KeyNotFoundException($"Trip with Id {trip.TripId} not found");
 
-            // Aktualizacja podstawowych pól
+            // Update the basic fields
             _context.Entry(existingTrip).CurrentValues.SetValues(trip);
 
-            // Synchronizacja kolekcji Travelers
+            // Update guide
+            existingTrip.GuideId = trip.GuideId;
+            _context.Attach(trip.Guide);
+            existingTrip.Guide = trip.Guide;
+
+            // Sync Travelers collection
             existingTrip.Travelers.Clear();
             foreach (var traveler in trip.Travelers)
             {
@@ -68,18 +73,10 @@ namespace aspapp.Repositories
                 existingTrip.Travelers.Add(traveler);
             }
 
-            // Synchronizacja kolekcji Guides
-            existingTrip.Guides.Clear();
-            foreach (var guide in trip.Guides)
-            {
-                _context.Attach(guide);
-                existingTrip.Guides.Add(guide);
-            }
-
             await _context.SaveChangesAsync();
         }
 
-        // Usuwa podróż po ID
+        // Delete a trip by its ID
         public async Task DeleteTrip(int id)
         {
             var trip = await _context.Trips.FindAsync(id);

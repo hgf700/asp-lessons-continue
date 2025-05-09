@@ -1,0 +1,38 @@
+﻿@model IEnumerable<aspapp.Models.VM.TripViewModel>
+
+@{
+    ViewData["Title"] = "Trip List";
+}
+
+<h1>Trip List</h1>
+
+<p>
+    <a href="@Url.Action("Create", "Trip")" class="btn btn-primary">Create New Trip</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Destination</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Guide</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var trip in Model)
+        {
+            <tr>
+                <td>@trip.Destination</td>
+                <td>@trip.StartDate.ToShortDateString()</td>
+                <td>@trip.EndDate.ToShortDateString()</td>
+                <td>@trip.Guide?.Firstname @trip.Guide?.Lastname</td>
+                <td>
+                    <!-- Add edit or delete links here if needed -->
+                    <a href="@Url.Action("Edit", "Trip", new { id = trip.TripId })" class="btn btn-warning btn-sm">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

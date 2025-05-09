@@ -1,0 +1,38 @@
+﻿@model IEnumerable<aspapp.Models.VM.TravelerViewModel>
+
+@{
+    ViewData["Title"] = "Traveler Index";
+}
+
+<h1>Traveler List</h1>
+
+<p>
+    <a href="@Url.Action("Create", "Traveler")" class="btn btn-primary">Create New Traveler</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Email</th>
+            <th>Birth Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var traveler in Model)
+        {
+            <tr>
+                <td>@traveler.Firstname</td>
+                <td>@traveler.Lastname</td>
+                <td>@traveler.Email</td>
+                <td>@traveler.BirthDate.ToShortDateString()</td>
+                <td>
+                    <!-- Add edit or delete links here, if required -->
+                    <a href="@Url.Action("Edit", "Traveler", new { id = traveler.TravelerId })" class="btn btn-warning btn-sm">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
