@@ -1,19 +1,16 @@
-﻿//using aspapp.Models;
-//using aspapp.Models.VM;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using aspapp.Models;
+using aspapp.Models.VM;
+using System.Linq;
+using System.Threading.Tasks;
 
-//namespace aspapp.Services
-//{
-//    public interface ITripService
-//    {
-//        IQueryable<TripViewModel> GetAllTrips();
-//        Task<TripViewModel> GetTripById(int tripId);
-//        Task AddTrip(TripViewModel tripvm);
-//        Task UpdateTrip(TripViewModel tripvm);
-//        Task DeleteTrip(int tripId);
-//    }
-//}
+namespace aspapp.Services
+{
+    public interface ITripService
+    {
+        IQueryable<TripViewModel> GetAllTrips();  // Zwracamy model Trip, nie TripViewModel
+        Task<TripViewModel> GetTripById(int tripId);  // Zwracamy model Trip, nie TripViewModel
+        Task AddTrip(TripViewModel trip);  // Używamy modelu Trip
+        Task UpdateTrip(TripViewModel trip);  // Używamy modelu Trip
+        Task DeleteTrip(int tripId);  // Używamy TripId
+    }
+}

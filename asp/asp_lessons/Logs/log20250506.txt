@@ -457,3 +457,20 @@ FROM [Travelers] AS [t]
 2025-05-06 20:08:02.143 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_vs/browserLink - 200 null text/javascript; charset=UTF-8 33.2824ms
 2025-05-06 20:08:02.144 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - null null
 2025-05-06 20:08:02.150 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - 200 13764 application/javascript; charset=utf-8 40.4462ms
+2025-05-06 20:31:14.565 +02:00 [INF] User profile is available. Using 'C:\Users\USER098\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-05-06 20:31:14.838 +02:00 [INF] Now listening on: https://localhost:7205
+2025-05-06 20:31:14.838 +02:00 [INF] Now listening on: http://localhost:5012
+2025-05-06 20:31:14.906 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-05-06 20:31:14.906 +02:00 [INF] Hosting environment: Development
+2025-05-06 20:31:14.906 +02:00 [INF] Content root path: C:\Users\USER098\Documents\GitHub\asp-lessons-continue\asp\asp_lessons
+2025-05-06 20:31:16.044 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7205/ - null null
+2025-05-06 20:31:16.219 +02:00 [INF] Executing endpoint 'aspapp.Controllers.HomeController.Index (aspapp)'
+2025-05-06 20:31:16.244 +02:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller aspapp.Controllers.HomeController (aspapp).
+2025-05-06 20:31:16.258 +02:00 [INF] Executing ViewResult, running view Index.
+2025-05-06 20:31:16.360 +02:00 [INF] Executed ViewResult - view Index executed in 109.0881ms.
+2025-05-06 20:31:16.362 +02:00 [INF] Executed action aspapp.Controllers.HomeController.Index (aspapp) in 117.0537ms
+2025-05-06 20:31:16.362 +02:00 [INF] Executed endpoint 'aspapp.Controllers.HomeController.Index (aspapp)'
+2025-05-06 20:31:16.377 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7205/ - 200 null text/html; charset=utf-8 347.63ms
+2025-05-06 20:31:16.528 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - null null
+2025-05-06 20:31:16.558 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7205/_framework/aspnetcore-browser-refresh.js - 200 13764 application/javascript; charset=utf-8 30.1789ms
+2025-05-06 20:31:16.601 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7205/_vs/browserLink - null null

@@ -2,18 +2,13 @@
 {
     public class Trip
     {
-        public int Id { get; set; }
+        public int TripId { get; set; }
+        public string Destination { get; set; } = string.Empty;
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
 
-        public string Title { get; set; } = string.Empty;
-
-        public string Description { get; set; } = string.Empty;
-
-        // Jeden przewodnik
-        public int? GuideId { get; set; }
-
-        public Guide? Guide { get; set; }
-
-        // Lista podróżników (many-to-many)
-        public List<Traveler> Travelers { get; set; } = new();
+        public int GuideId { get; set; }
+        public ICollection<Traveler> Travelers { get; set; } = new List<Traveler>();
+        public ICollection<Guide> Guides { get; set; } = new List<Guide>();
     }
 }

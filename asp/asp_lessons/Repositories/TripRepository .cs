@@ -1,10 +1,8 @@
 ﻿using aspapp.Models;
-using aspapp.Repositories;
-using aspapp.Services;
-using aspapp.Models.Validator;
-using aspapp.Models.VM;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace aspapp.Repositories
@@ -18,42 +16,78 @@ namespace aspapp.Repositories
             _context = context;
         }
 
+        // Pobiera wszystkie podróże z dołączonymi przewodnikami i podróżnikami
         public IQueryable<Trip> GetAllTrips()
         {
             return _context.Trips
-                .Include(t => t.Guide)
+                .Include(t => t.Guides)
                 .Include(t => t.Travelers);
         }
 
-        public async Task<Trip> GetTripById(int tripId)
+        // Pobiera jedną podróż po ID z dołączonymi kolekcjami
+        public async Task<Trip?> GetTripById(int id)
         {
             return await _context.Trips
-                .Include(t => t.Guide)
+                .Include(t => t.Guides)
                 .Include(t => t.Travelers)
-                .FirstOrDefaultAsync(t => t.Id == tripId);
+                .FirstOrDefaultAsync(t => t.TripId == id);
         }
 
-
+        // Dodaje nową podróż
         public async Task AddTrip(Trip trip)
         {
-            await _context.Trips.AddAsync(trip);
+            if (trip == null)
+                throw new ArgumentNullException(nameof(trip));
+
+            _context.Trips.Add(trip);
             await _context.SaveChangesAsync();
         }
 
+        // Aktualizuje istniejącą podróż oraz powiązania
         public async Task UpdateTrip(Trip trip)
         {
-            _context.Trips.Update(trip);
+            if (trip == null)
+                throw new ArgumentNullException(nameof(trip));
+
+            var existingTrip = await _context.Trips
+                .Include(t => t.Guides)
+                .Include(t => t.Travelers)
+                .FirstOrDefaultAsync(t => t.TripId == trip.TripId);
+
+            if (existingTrip == null)
+                throw new KeyNotFoundException($"Trip with Id {trip.TripId} not found");
+
+            // Aktualizacja podstawowych pól
+            _context.Entry(existingTrip).CurrentValues.SetValues(trip);
+
+            // Synchronizacja kolekcji Travelers
+            existingTrip.Travelers.Clear();
+            foreach (var traveler in trip.Travelers)
+            {
+                _context.Attach(traveler);
+                existingTrip.Travelers.Add(traveler);
+            }
+
+            // Synchronizacja kolekcji Guides
+            existingTrip.Guides.Clear();
+            foreach (var guide in trip.Guides)
+            {
+                _context.Attach(guide);
+                existingTrip.Guides.Add(guide);
+            }
+
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteTrip(int tripId)
+        // Usuwa podróż po ID
+        public async Task DeleteTrip(int id)
         {
-            var trip = await _context.Trips.FindAsync(tripId);
-            if (trip != null)
-            {
-                _context.Trips.Remove(trip);
-                await _context.SaveChangesAsync();
-            }
+            var trip = await _context.Trips.FindAsync(id);
+            if (trip == null)
+                throw new KeyNotFoundException($"Trip with Id {id} not found");
+
+            _context.Trips.Remove(trip);
+            await _context.SaveChangesAsync();
         }
     }
 }

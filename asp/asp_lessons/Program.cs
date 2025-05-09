@@ -3,7 +3,7 @@ using aspapp.Repositories;
 using aspapp.Services;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
-using aspapp.Models.Validator;
+//using aspapp.Models.Validator;
 using Serilog;
 using AutoMapper;
 
@@ -26,12 +26,12 @@ builder.Services.AddScoped<IGuideRepository, GuideRepository>();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 
 builder.Services.AddScoped<ITravelerService, TravelerService>();
-//builder.Services.AddScoped<ITripService, TripService>();
-//builder.Services.AddScoped<IGuideService, GuideService>();
+builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<IGuideService, GuideService>();
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddValidatorsFromAssemblyContaining<TripViewModelValidator>();
+//builder.Services.AddValidatorsFromAssemblyContaining<TripViewModelValidator>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

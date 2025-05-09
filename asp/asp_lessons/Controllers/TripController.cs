@@ -1,156 +1,127 @@
-﻿using aspapp.Models;
-using aspapp.Models.VM;
-using aspapp.Repositories;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Threading.Tasks;
+﻿//using aspapp.Models;
+//using aspapp.Models.VM;
+//using aspapp.Services;
+//using AutoMapper;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
 
-namespace aspapp.Controllers
-{
-    [Route("trip")]
-    public class TripController : Controller
-    {
-        private readonly ITripRepository _tripRepository;
-        private readonly IGuideRepository _guideRepository;
-        private readonly ITravelerRepository _travelerRepository;
-        private readonly ILogger<TripController> _logger;
-        private readonly IMapper _mapper;
+//namespace aspapp.Controllers
+//{
+//    [Route("trip")]
+//    public class TripController : Controller
+//    {
+//        private readonly ITripService _tripService;
+//        private readonly IGuideService _guideService;
+//        private readonly ITravelerService _travelerService;
+//        private readonly IMapper _mapper;
 
-        public TripController(
-            ITripRepository tripRepository,
-            IGuideRepository guideRepository,
-            ITravelerRepository travelerRepository,
-            ILogger<TripController> logger,
-            IMapper mapper)
-        {
-            _tripRepository = tripRepository;
-            _guideRepository = guideRepository;
-            _travelerRepository = travelerRepository;
-            _logger = logger;
-            _mapper = mapper;
-        }
+//        public TripController(ITripService tripService, IGuideService guideService, ITravelerService travelerService, IMapper mapper)
+//        {
+//            _tripService = tripService;
+//            _guideService = guideService;
+//            _travelerService = travelerService;
+//            _mapper = mapper;
+//        }
 
-        [HttpGet("create")]
-        public async Task<IActionResult> Create()
-        {
-            var viewModel = new TripViewModel
-            {
-                Guides = await _guideRepository.GetAllGuides().ToListAsync(),
-                Travelers = await _travelerRepository.GetAllTravelers().ToListAsync()
-            };
+//        [HttpGet("")]
+//        public async Task<IActionResult> Index()
+//        {
+//            var trips = await _tripService.GetAllTrips().ToListAsync();
+//            return View(trips);
+//        }
+//        [HttpGet("create")]
+//        public async Task<IActionResult> Create()
+//        {
+//            var vm = new TripViewModel
+//            {
+//                // Mapowanie GuideViewModel na Guide
+//                Guides = await _guideService.GetAllGuides()
+//                    .Select(g => _mapper.Map<GuideViewModel>(g))  // Mapowanie Guide do GuideViewModel
+//                    .ToListAsync(),
 
-            return View(viewModel);
-        }
+//                Travelers = await _travelerService.GetAllTravelers()
+//                    .Select(t => new TravelerViewModel { TravelerId = t.TravelerId, Firstname = t.Firstname, Lastname = t.Lastname })
+//                    .ToListAsync()  // Mapowanie na TravelerViewModel
+//            };
 
-        [HttpPost("create")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TripViewModel model)
-        {
-            _logger.LogInformation("Wywołano akcję Create");
+//            return View(vm);
+//        }
 
-            if (!ModelState.IsValid)
-            {
-                _logger.LogWarning("ModelState jest niepoprawny");
-                model.Guides = await _guideRepository.GetAllGuides().ToListAsync();
-                model.Travelers = await _travelerRepository.GetAllTravelers().ToListAsync();
-                return View(model);
-            }
+//        [HttpPost("create")]
+//        [ValidateAntiForgeryToken]
+//        public async Task<IActionResult> Create(TripViewModel vm)
+//        {
+//            if (!ModelState.IsValid)
+//            {
+//                // Mapowanie GuideViewModel na Guide po stronie błędu
+//                vm.Guides = await _guideService.GetAllGuides()
+//                    .Select(g => _mapper.Map<GuideViewModel>(g))
+//                    .ToListAsync();
 
-            var trip = new Trip
-            {
-                Title = model.Title,
-                Description = model.Description,
-                GuideId = model.GuideId,
-                Travelers = await _travelerRepository
-                    .GetAllTravelers()
-                    .Where(t => model.TravelerIds.Contains(t.Id))
-                    .ToListAsync()
-            };
+//                vm.Travelers = await _travelerService.GetAllTravelers()
+//                    .Select(t => new TravelerViewModel { TravelerId = t.TravelerId, Firstname = t.Firstname, Lastname = t.Lastname })
+//                    .ToListAsync();  // Mapowanie na TravelerViewModel
 
-            await _tripRepository.AddTrip(trip);
-            return RedirectToAction(nameof(Index));
-        }
+//                return View(vm);
+//            }
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            var trips = await _tripRepository.GetAllTrips().ToListAsync();
-            return View(trips);
-        }
+//            var model = _mapper.Map<Trip>(vm);
+//            await _tripService.AddTrip(model);
 
-        [HttpGet("edit")]
-        public async Task<IActionResult> EditTrip(int id)
-        {
-            var trip = await _tripRepository.GetTripById(id);
-            if (trip == null)
-            {
-                return NotFound();
-            }
+//            return RedirectToAction(nameof(Index));
+//        }
 
-            var viewModel = new TripViewModel
-            {
-                Id = trip.Id,
-                Title = trip.Title,
-                Description = trip.Description,
-                GuideId = trip.GuideId,
-                TravelerIds = trip.Travelers.Select(t => t.Id).ToList(),
-                Guides = await _guideRepository.GetAllGuides().ToListAsync(),
-                Travelers = await _travelerRepository.GetAllTravelers().ToListAsync()
-            };
+//        [HttpGet("edit/{id}")]
+//        public async Task<IActionResult> EditTrip(int id)
+//        {
+//            var trip = await _tripService.GetTripById(id);
+//            if (trip == null) return NotFound();
 
-            return View(viewModel);
-        }
+//            var vm = _mapper.Map<TripViewModel>(trip);
+//            vm.Guides = await _guideService.GetAllGuides().ToListAsync();
+//            vm.Travelers = await _travelerService.GetAllTravelers()
+//                .Select(t => new TravelerViewModel { TravelerId = t.TravelerId, Firstname = t.Firstname, Lastname = t.Lastname })
+//                .ToListAsync();  // Mapowanie na TravelerViewModel
 
-        [HttpPost("edit")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTrip(int id, TripViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                model.Guides = await _guideRepository.GetAllGuides().ToListAsync();
-                model.Travelers = await _travelerRepository.GetAllTravelers().ToListAsync();
-                return View(model);
-            }
+//            return View(vm);
+//        }
 
-            var trip = await _tripRepository.GetTripById(id);
-            if (trip == null)
-            {
-                return NotFound();
-            }
+//        [HttpPost("edit/{id}")]
+//        [ValidateAntiForgeryToken]
+//        public async Task<IActionResult> EditTrip(int id, TripViewModel vm)
+//        {
+//            if (!ModelState.IsValid)
+//            {
+//                vm.Guides = await _guideService.GetAllGuides().ToListAsync();
+//                vm.Travelers = await _travelerService.GetAllTravelers()
+//                    .Select(t => new TravelerViewModel { TravelerId = t.TravelerId, Firstname = t.Firstname, Lastname = t.Lastname })
+//                    .ToListAsync();  // Mapowanie na TravelerViewModel
 
-            trip.Title = model.Title;
-            trip.Description = model.Description;
-            trip.GuideId = model.GuideId;
-            trip.Travelers = await _travelerRepository
-                .GetAllTravelers()
-                .Where(t => model.TravelerIds.Contains(t.Id))
-                .ToListAsync();
+//                return View(vm);
+//            }
 
-            await _tripRepository.UpdateTrip(trip);
-            return RedirectToAction(nameof(Index));
-        }
+//            var model = _mapper.Map<Trip>(vm);
+//            model.TripId = id;
 
-        [HttpGet("delete")]
-        public async Task<IActionResult> DeleteTrip(int id)
-        {
-            var trip = await _tripRepository.GetTripById(id);
-            if (trip == null)
-            {
-                return NotFound();
-            }
+//            await _tripService.UpdateTrip(model);
 
-            return View(trip);
-        }
+//            return RedirectToAction(nameof(Index));
+//        }
 
-        [HttpPost("delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteTripConfirmed(int id)
-        {
-            await _tripRepository.DeleteTrip(id);
-            return RedirectToAction(nameof(Index));
-        }
-    }
-}
+
+//        [HttpGet("delete/{id}")]
+//        public async Task<IActionResult> DeleteTrip(int id)
+//        {
+//            var trip = await _tripService.GetTripById(id);
+//            return trip == null ? NotFound() : View(trip);
+//        }
+
+//        [HttpPost("delete/{id}")]
+//        [ValidateAntiForgeryToken]
+//        public async Task<IActionResult> DeleteTripConfirmed(int id)
+//        {
+//            await _tripService.DeleteTrip(id);
+//            return RedirectToAction(nameof(Index));
+//        }
+//    }
+//}

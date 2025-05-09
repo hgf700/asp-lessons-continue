@@ -1,18 +1,13 @@
-﻿using aspapp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using aspapp.Models.VM;
 
 namespace aspapp.Services
 {
     public interface ITravelerService
     {
-        IQueryable<Traveler> GetAllTravelers();
-        Task<Traveler> GetTravelerById(int travelerId);
-        Task AddTraveler(Traveler traveler);
-        Task UpdateTraveler(Traveler traveler);
+        Task<List<TravelerViewModel>> GetAllTravelers(); // Returns a list of TravelerViewModel
+        Task<TravelerViewModel> GetTravelerById(int travelerId);
+        Task AddTraveler(TravelerViewModel traveler);
+        Task UpdateTraveler(TravelerViewModel traveler);
         Task DeleteTraveler(int travelerId);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using aspapp.Models;
 
 namespace aspapp.Models
 {
@@ -13,31 +12,23 @@ namespace aspapp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Many-to-Many: Trip - Traveler
+            // Relacja między Trip a Traveler
             modelBuilder.Entity<Trip>()
-                .HasMany(t => t.Travelers)
-                .WithMany(tr => tr.Trips)
-                .UsingEntity<Dictionary<string, object>>(
-                    "TripTraveler",
-                    j => j
-                        .HasOne<Traveler>()
-                        .WithMany()
-                        .HasForeignKey("TravelerId")
-                        .OnDelete(DeleteBehavior.Cascade),
-                    j => j
-                        .HasOne<Trip>()
-                        .WithMany()
-                        .HasForeignKey("TripId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                );
+                .HasMany(t => t.Travelers)  // Trip ma wielu Travelerów
+                .WithMany(t => t.Trips)     // Traveler ma wiele Tripów
+                .UsingEntity(j => j.ToTable("TripTraveler")); // Dodatkowa tabela pośrednia, ponieważ mamy relację wielu do wielu
 
-            // One-to-Many: Guide - Trip
+            // Relacja między Trip a Guide
             modelBuilder.Entity<Trip>()
-                .HasOne(t => t.Guide)
-                .WithMany(g => g.Trips)
-                .HasForeignKey(t => t.GuideId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasMany(t => t.Guides)    // Trip ma wielu Guides
+                .WithMany(g => g.Trips)    // Guide ma wiele Tripów
+                .UsingEntity(j => j.ToTable("TripGuide")); // Dodatkowa tabela pośrednia
+
+            // Opcjonalnie możesz dodać konfigurację dla tabel pośrednich, jeśli chcesz przechowywać dodatkowe dane (np. daty)
+            // modelBuilder.Entity<TripTraveler>()
+            //     .HasKey(tt => new { tt.TripId, tt.TravelerId }); // Klucz złożony
+            // modelBuilder.Entity<TripGuide>()
+            //     .HasKey(tg => new { tg.TripId, tg.GuideId }); // Klucz złożony
         }
-
     }
 }

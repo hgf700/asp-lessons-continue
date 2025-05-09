@@ -1,8 +1,7 @@
 ﻿using aspapp.Models;
-using aspapp.Repositories;
-using aspapp.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace aspapp.Repositories
@@ -16,36 +15,76 @@ namespace aspapp.Repositories
             _context = context;
         }
 
-        public IQueryable<Traveler> GetAllTravelers()
+        // Pobierz wszystkich podróżników (bez śledzenia zmian)
+        public IQueryable<Traveler> GetAllTravelers(bool includeTrips = false)
         {
-            return _context.Travelers;
+            var query = _context.Travelers.AsQueryable();
+
+            // Jeśli chcesz dołączyć podróże, używamy Include
+            if (includeTrips)
+            {
+                query = query.Include(t => t.Trips);
+            }
+
+            return query.AsNoTracking();
         }
 
-        public async Task<Traveler> GetTravelerById(int travelerId)
+        // Pobierz podróżnika po ID z wycieczkami
+        public async Task<Traveler?> GetTravelerById(int travelerId, bool includeTrips = false)
         {
-            return await _context.Travelers.FindAsync(travelerId);
+            var query = _context.Travelers.AsQueryable();
+
+            // Jeśli chcesz dołączyć podróże, używamy Include
+            if (includeTrips)
+            {
+                query = query.Include(t => t.Trips);
+            }
+
+            return await query.AsNoTracking()
+                               .FirstOrDefaultAsync(t => t.TravelerId == travelerId);
         }
 
+        // Dodaj podróżnika
         public async Task AddTraveler(Traveler traveler)
         {
+            // Sprawdzamy, czy podróżnik o tym samym emailu już istnieje
+            var existingTraveler = await _context.Travelers
+                .FirstOrDefaultAsync(t => t.Email == traveler.Email);
+
+            if (existingTraveler != null)
+            {
+                throw new InvalidOperationException("Podróżnik z tym emailem już istnieje.");
+            }
+
             await _context.Travelers.AddAsync(traveler);
             await _context.SaveChangesAsync();
         }
 
+        // Zaktualizuj dane podróżnika (zabezpieczenie przed null)
         public async Task UpdateTraveler(Traveler traveler)
         {
-            _context.Travelers.Update(traveler);
+            var existingTraveler = await _context.Travelers.FindAsync(traveler.TravelerId);
+            if (existingTraveler == null)
+            {
+                throw new KeyNotFoundException("Podróżnik o podanym ID nie został znaleziony.");
+            }
+
+            // Zaktualizowanie wartości istniejącego podróżnika
+            _context.Entry(existingTraveler).CurrentValues.SetValues(traveler);
             await _context.SaveChangesAsync();
         }
 
+        // Usuń podróżnika
         public async Task DeleteTraveler(int travelerId)
         {
             var traveler = await _context.Travelers.FindAsync(travelerId);
-            if (traveler != null)
+            if (traveler == null)
             {
-                _context.Travelers.Remove(traveler);
-                await _context.SaveChangesAsync();
+                throw new KeyNotFoundException("Podróżnik o podanym ID nie został znaleziony.");
             }
+
+            _context.Travelers.Remove(traveler);
+            await _context.SaveChangesAsync();
         }
     }
 }

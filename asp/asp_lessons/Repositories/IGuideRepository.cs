@@ -4,8 +4,8 @@ namespace aspapp.Repositories
 {
     public interface IGuideRepository
     {
-        IQueryable<Guide> GetAllGuides();
-        Task<Guide> GetGuideById(int guideId);
+        IQueryable<Guide> GetAllGuides(bool includeTrips = false);  // Include parameter for trips
+        Task<Guide?> GetGuideById(int guideId, bool includeTrips = false);  // Include parameter for trips
         Task AddGuide(Guide guide);
         Task UpdateGuide(Guide guide);
         Task DeleteGuide(int guideId);

@@ -39,11 +39,11 @@ namespace aspapp.Migrations
 
             modelBuilder.Entity("aspapp.Models.Guide", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("GuideId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GuideId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -60,18 +60,18 @@ namespace aspapp.Migrations
                     b.Property<int>("Title")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("GuideId");
 
                     b.ToTable("Guides");
                 });
 
             modelBuilder.Entity("aspapp.Models.Traveler", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TravelerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TravelerId"));
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -88,31 +88,31 @@ namespace aspapp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TravelerId");
 
                     b.ToTable("Travelers");
                 });
 
             modelBuilder.Entity("aspapp.Models.Trip", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TripId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TripId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("GuideId")
+                    b.Property<int>("GuideId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TripId");
 
                     b.HasIndex("GuideId");
 
@@ -139,7 +139,8 @@ namespace aspapp.Migrations
                     b.HasOne("aspapp.Models.Guide", "Guide")
                         .WithMany("Trips")
                         .HasForeignKey("GuideId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Guide");
                 });
