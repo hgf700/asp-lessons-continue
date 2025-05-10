@@ -54,66 +54,36 @@ namespace aspapp.Services
         {
             ValidateTripViewModel(tripViewModel);
 
-            // Fetch the guide and travelers
+            // Fetch the guide (without trying to insert it again)
             var guide = await _guideRepository.GetGuideById(tripViewModel.GuideId);
             if (guide == null)
                 throw new KeyNotFoundException($"Guide with Id {tripViewModel.GuideId} not found.");
 
+            // Fetch selected travelers
             var travelers = new List<Traveler>();
-            foreach (var travelerVM in tripViewModel.Travelers)
+            foreach (var travelerId in tripViewModel.SelectedTravelerIds)
             {
-                var traveler = await _travelerRepository.GetTravelerById(travelerVM.TravelerId);
+                var traveler = await _travelerRepository.GetTravelerById(travelerId);
                 if (traveler == null)
-                    throw new KeyNotFoundException($"Traveler with Id {travelerVM.TravelerId} not found.");
+                    throw new KeyNotFoundException($"Traveler with Id {travelerId} not found.");
 
                 travelers.Add(traveler);
             }
 
+            // Map the Trip entity
             var trip = _mapper.Map<Trip>(tripViewModel);
+
+            // Do not set the guide as a new object, just assign the existing one
             trip.Guide = guide;
+
+            // Assign the travelers
             trip.Travelers = travelers;
 
+            // Add the new trip to the repository
             await _tripRepository.AddTrip(trip);
         }
 
-        public async Task UpdateTrip(TripViewModel tripViewModel)
-        {
-            ValidateTripViewModel(tripViewModel);
 
-            var existingTrip = await _tripRepository.GetTripById(tripViewModel.TripId);
-            if (existingTrip == null)
-                throw new KeyNotFoundException($"Trip with Id {tripViewModel.TripId} not found.");
-
-            // Fetch the guide and travelers
-            var guide = await _guideRepository.GetGuideById(tripViewModel.GuideId);
-            if (guide == null)
-                throw new KeyNotFoundException($"Guide with Id {tripViewModel.GuideId} not found.");
-
-            var travelers = new List<Traveler>();
-            foreach (var travelerVM in tripViewModel.Travelers)
-            {
-                var traveler = await _travelerRepository.GetTravelerById(travelerVM.TravelerId);
-                if (traveler == null)
-                    throw new KeyNotFoundException($"Traveler with Id {travelerVM.TravelerId} not found.");
-
-                travelers.Add(traveler);
-            }
-
-            var updatedTrip = _mapper.Map<Trip>(tripViewModel);
-            updatedTrip.Guide = guide;
-            updatedTrip.Travelers = travelers;
-
-            await _tripRepository.UpdateTrip(updatedTrip);
-        }
-
-        public async Task DeleteTrip(int tripId)
-        {
-            var trip = await _tripRepository.GetTripById(tripId);
-            if (trip == null)
-                throw new KeyNotFoundException($"Trip with Id {tripId} not found.");
-
-            await _tripRepository.DeleteTrip(tripId);
-        }
 
         private void ValidateTripViewModel(TripViewModel viewModel)
         {

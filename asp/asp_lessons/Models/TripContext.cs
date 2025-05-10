@@ -12,6 +12,15 @@ namespace aspapp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Konfiguracja kolumn ID jako automatycznie generowane
+            modelBuilder.Entity<Guide>()
+                .Property(g => g.GuideId)
+                .ValueGeneratedOnAdd(); // Wartości dla GuideId są generowane automatycznie
+
+            modelBuilder.Entity<Traveler>()
+                .Property(t => t.TravelerId)
+                .ValueGeneratedOnAdd(); // Wartości dla TravelerId są generowane automatycznie
+
             // Trip–Traveler (many-to-many relationship)
             modelBuilder.Entity<Trip>()
                 .HasMany(t => t.Travelers)

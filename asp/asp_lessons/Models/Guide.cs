@@ -1,7 +1,12 @@
-﻿namespace aspapp.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace aspapp.Models
 {
     public class Guide
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int GuideId { get; set; }
         public string Firstname { get; set; } = string.Empty;
         public string Lastname { get; set; } = string.Empty;

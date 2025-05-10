@@ -2,7 +2,6 @@
 using aspapp.Models;
 using aspapp.Services;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using aspapp.Models.VM;
 
 namespace aspapp.Controllers
@@ -51,9 +50,14 @@ namespace aspapp.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Make sure SelectedTravelerIds is set, even if it's empty
+                tripViewModel.SelectedTravelerIds ??= new List<int>();
+
+                // Add the trip through the service
                 await _tripService.AddTrip(tripViewModel);
                 return RedirectToAction(nameof(Index));
             }
+
             // Reload the lists of guides and travelers in case of validation failure
             tripViewModel.Guides = await _guideService.GetAllGuides();
             tripViewModel.Travelers = await _travelerService.GetAllTravelers();

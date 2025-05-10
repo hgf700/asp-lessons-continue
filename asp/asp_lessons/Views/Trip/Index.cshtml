@@ -17,6 +17,7 @@
             <th>Start Date</th>
             <th>End Date</th>
             <th>Guide</th>
+            <th>Travelers</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -29,8 +30,16 @@
                 <td>@trip.EndDate.ToShortDateString()</td>
                 <td>@trip.Guide?.Firstname @trip.Guide?.Lastname</td>
                 <td>
-                    <!-- Add edit or delete links here if needed -->
+                    @foreach (var traveler in trip.Travelers)
+                    {
+                        <span>@traveler.Firstname @traveler.Lastname</span>
+
+                        <br />
+                    }
+                </td>
+                <td>
                     <a href="@Url.Action("Edit", "Trip", new { id = trip.TripId })" class="btn btn-warning btn-sm">Edit</a>
+                    <!-- Add delete functionality here if needed -->
                 </td>
             </tr>
         }

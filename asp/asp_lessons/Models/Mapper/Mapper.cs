@@ -13,8 +13,9 @@ public class TripProfile : Profile
             .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
             .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
             .ForMember(dest => dest.GuideId, opt => opt.MapFrom(src => src.GuideId))
-            .ForMember(dest => dest.Guide, opt => opt.MapFrom(src => src.Guide))
-            .ForMember(dest => dest.Travelers, opt => opt.MapFrom(src => src.Travelers));
+            .ForMember(dest => dest.Guide, opt => opt.MapFrom(src => src.Guide)) // Map Guide directly (already populated in the entity)
+            .ForMember(dest => dest.Travelers, opt => opt.MapFrom(src => src.Travelers)) // Map Travelers directly (already populated in the entity)
+            .ForMember(dest => dest.SelectedTravelerIds, opt => opt.MapFrom(src => src.Travelers.Select(t => t.TravelerId).ToList())); // Map TravelerIds for selected travelers
 
         // TripViewModel → Trip
         CreateMap<TripViewModel, Trip>()
@@ -22,9 +23,9 @@ public class TripProfile : Profile
             .ForMember(dest => dest.Destination, opt => opt.MapFrom(src => src.Destination))
             .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
             .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
-            .ForMember(dest => dest.GuideId, opt => opt.MapFrom(src => src.GuideId))
-            .ForMember(dest => dest.Guide, opt => opt.Ignore()) // GuideId should suffice
-            .ForMember(dest => dest.Travelers, opt => opt.MapFrom(src => src.Travelers));
+            .ForMember(dest => dest.GuideId, opt => opt.MapFrom(src => src.GuideId)) // Set GuideId directly from ViewModel
+            .ForMember(dest => dest.Guide, opt => opt.Ignore()) // Ignore Guide, it will be set manually in the service layer
+            .ForMember(dest => dest.Travelers, opt => opt.Ignore()); // Ignore Travelers, it will be set manually in the service layer
 
         // Traveler → TravelerViewModel
         CreateMap<Traveler, TravelerViewModel>()

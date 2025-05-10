@@ -10,7 +10,10 @@
         public int GuideId { get; set; } // Wybrany przewodnik
         public GuideViewModel? Guide { get; set; }
 
-        public List<TravelerViewModel> Travelers { get; set; } = new(); // Lista wybranych podróżników
-        public List<GuideViewModel> Guides { get; set; } = new();       // Lista przewodników do wyboru w formularzu
+        public List<GuideViewModel> Guides { get; set; } = new(); // Lista przewodników do wyboru w formularzu
+
+        public List<TravelerViewModel> Travelers { get; set; } = new(); // Lista dostępnych podróżników do wyświetlenia
+
+        public List<int> SelectedTravelerIds { get; set; } = new(); // <-- NOWE: zaznaczeni podróżnicy
     }
 }
