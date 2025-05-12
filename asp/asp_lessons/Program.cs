@@ -3,11 +3,9 @@ using aspapp.Repositories;
 using aspapp.Services;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
-//using aspapp.Models.Validator;
 using Serilog;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +18,6 @@ builder.Host.UseSerilog();
 builder.Services.AddDbContext<TripContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TripContext>();
-
 builder.Services.AddScoped<ITravelerRepository, TravelerRepository>();
 builder.Services.AddScoped<IGuideRepository, GuideRepository>();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
@@ -31,8 +27,6 @@ builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<IGuideService, GuideService>();
 
 builder.Services.AddControllersWithViews();
-
-//builder.Services.AddValidatorsFromAssemblyContaining<TripViewModelValidator>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -69,9 +63,30 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+})
+.AddEntityFrameworkStores<TripContext>()
+.AddDefaultTokenProviders();
+
 var app = builder.Build();
 
-// Konfiguracja potoku przetwarzania ��da�
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roleNames = new[] { "Admin", "Guide", "User" };
+
+    foreach (var roleName in roleNames)
+    {
+        var roleExist = await roleManager.RoleExistsAsync(roleName);
+        if (!roleExist)
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -85,10 +100,9 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthentication();   
-app.UseAuthorization();    
-app.MapRazorPages();       
-
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",

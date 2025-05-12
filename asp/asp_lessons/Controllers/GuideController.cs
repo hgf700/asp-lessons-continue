@@ -4,9 +4,11 @@ using aspapp.Services;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using aspapp.Models.VM;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aspapp.Controllers
 {
+    [Authorize(Roles = "Guide,Administrator")]
     [Route("guide")]
     public class GuideController : Controller
     {

@@ -3,9 +3,11 @@ using aspapp.Models;
 using aspapp.Services;
 using System.Threading.Tasks;
 using aspapp.Models.VM;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aspapp.Controllers
 {
+    [Authorize(Roles = "Guide,Administrator")]
     [Route("trip")]
     public class TripController : Controller
     {
