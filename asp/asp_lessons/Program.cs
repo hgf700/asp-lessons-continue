@@ -6,6 +6,8 @@ using FluentValidation;
 using Serilog;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using aspapp.ExtraTools;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +39,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     // Password settings.
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
+    //options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 1;
 
     // Lockout settings.
@@ -49,6 +51,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.AllowedUserNameCharacters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = false;
+
+
 });
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -69,6 +73,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<TripContext>()
 .AddDefaultTokenProviders();
+
+builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 
 var app = builder.Build();
 
