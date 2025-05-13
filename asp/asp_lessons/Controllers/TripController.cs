@@ -4,6 +4,7 @@ using aspapp.Services;
 using System.Threading.Tasks;
 using aspapp.Models.VM;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace aspapp.Controllers
 {
@@ -14,15 +15,18 @@ namespace aspapp.Controllers
         private readonly ITripService _tripService;
         private readonly IGuideService _guideService;
         private readonly ITravelerService _travelerService;
+        private readonly UserManager<IdentityUser> _userManager;
+        string[] roleNames = { "Admin", "Guide", "User" };
 
-        public TripController(ITripService tripService, IGuideService guideService, ITravelerService travelerService)
+        public TripController(ITripService tripService, IGuideService guideService, ITravelerService travelerService, UserManager<IdentityUser> userManager)
         {
             _tripService = tripService;
             _guideService = guideService;
             _travelerService = travelerService;
+            _userManager = userManager;
         }
 
-        // Index GET
+        [Authorize(Roles = "Admin,Guide")]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -30,7 +34,7 @@ namespace aspapp.Controllers
             return View(trips);
         }
 
-        // Create GET
+        [Authorize(Roles = "Admin,Guide")]
         [HttpGet("create")]
         public async Task<IActionResult> Create()
         {
@@ -45,7 +49,7 @@ namespace aspapp.Controllers
             return View(model);
         }
 
-        // Create POST
+        [Authorize(Roles = "Admin,Guide")]
         [HttpPost("create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TripViewModel tripViewModel)
@@ -65,5 +69,69 @@ namespace aspapp.Controllers
             tripViewModel.Travelers = await _travelerService.GetAllTravelers();
             return View(tripViewModel);
         }
+
+        [Authorize(Roles = "Admin,Guide")]
+        [HttpGet("edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var trip = await _tripService.GetTripById(id);
+            if (trip == null)
+            {
+                return NotFound();
+            }
+
+            // Załaduj przewodników i podróżników ponownie
+            trip.Guides = await _guideService.GetAllGuides();
+            trip.Travelers = await _travelerService.GetAllTravelers();
+
+            return View(trip);
+        }
+
+        [Authorize(Roles = "Admin,Guide")]
+        [HttpPost("edit/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, TripViewModel tripViewModel)
+        {
+            if (id != tripViewModel.TripId)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                tripViewModel.SelectedTravelerIds ??= new List<int>();
+
+                await _tripService.UpdateTrip(tripViewModel);
+                return RedirectToAction(nameof(Index));
+            }
+
+            tripViewModel.Guides = await _guideService.GetAllGuides();
+            tripViewModel.Travelers = await _travelerService.GetAllTravelers();
+            return View(tripViewModel);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var trip = await _tripService.GetTripById(id);
+            if (trip == null)
+            {
+                return NotFound();
+            }
+
+            return View(trip); // Confirmation view
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("delete/{id}"), ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _tripService.DeleteTrip(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }

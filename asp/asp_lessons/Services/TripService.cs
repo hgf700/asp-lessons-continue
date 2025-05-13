@@ -83,7 +83,44 @@ namespace aspapp.Services
             await _tripRepository.AddTrip(trip);
         }
 
+        public async Task UpdateTrip(TripViewModel tripViewModel)
+        {
+            ValidateTripViewModel(tripViewModel);
 
+            var existingTrip = await _tripRepository.GetTripById(tripViewModel.TripId);
+            if (existingTrip == null)
+                throw new KeyNotFoundException($"Trip with Id {tripViewModel.TripId} not found.");
+
+            // Fetch the guide and travelers
+            var guide = await _guideRepository.GetGuideById(tripViewModel.GuideId);
+            if (guide == null)
+                throw new KeyNotFoundException($"Guide with Id {tripViewModel.GuideId} not found.");
+
+            var travelers = new List<Traveler>();
+            foreach (var travelerVM in tripViewModel.Travelers)
+            {
+                var traveler = await _travelerRepository.GetTravelerById(travelerVM.TravelerId);
+                if (traveler == null)
+                    throw new KeyNotFoundException($"Traveler with Id {travelerVM.TravelerId} not found.");
+
+                travelers.Add(traveler);
+            }
+
+            var updatedTrip = _mapper.Map<Trip>(tripViewModel);
+            updatedTrip.Guide = guide;
+            updatedTrip.Travelers = travelers;
+
+            await _tripRepository.UpdateTrip(updatedTrip);
+        }
+
+        public async Task DeleteTrip(int tripId)
+        {
+            var trip = await _tripRepository.GetTripById(tripId);
+            if (trip == null)
+                throw new KeyNotFoundException($"Trip with Id {tripId} not found.");
+
+            await _tripRepository.DeleteTrip(tripId);
+        }
 
         private void ValidateTripViewModel(TripViewModel viewModel)
         {

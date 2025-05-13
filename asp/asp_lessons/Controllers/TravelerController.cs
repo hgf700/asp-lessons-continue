@@ -31,12 +31,10 @@ namespace aspapp.Controllers
             return View(travelers);
         }
 
-        // Create GET
         [AllowAnonymous]
         [HttpGet("create")]
         public IActionResult Create() => View();
 
-        // Create POST
         [AllowAnonymous]
         [HttpPost("create")]
         [ValidateAntiForgeryToken]
@@ -63,6 +61,7 @@ namespace aspapp.Controllers
         }
 
         [Authorize(Roles = "Admin,User")]
+        //[AllowAnonymous]
         [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
@@ -104,7 +103,5 @@ namespace aspapp.Controllers
             await _travelerService.DeleteTraveler(id);
             return RedirectToAction(nameof(Index));
         }
-
-
     }
 }

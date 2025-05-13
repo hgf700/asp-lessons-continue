@@ -56,6 +56,47 @@ namespace aspapp.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateTrip(Trip trip)
+        {
+            if (trip == null)
+                throw new ArgumentNullException(nameof(trip));
 
+            var existingTrip = await _context.Trips
+                .Include(t => t.Guide)
+                .Include(t => t.Travelers)
+                .FirstOrDefaultAsync(t => t.TripId == trip.TripId);
+
+            if (existingTrip == null)
+                throw new KeyNotFoundException($"Trip with Id {trip.TripId} not found");
+
+            // Update the basic fields
+            _context.Entry(existingTrip).CurrentValues.SetValues(trip);
+
+            // Update guide
+            existingTrip.GuideId = trip.GuideId;
+            _context.Attach(trip.Guide);
+            existingTrip.Guide = trip.Guide;
+
+            // Sync Travelers collection
+            existingTrip.Travelers.Clear();
+            foreach (var traveler in trip.Travelers)
+            {
+                _context.Attach(traveler);
+                existingTrip.Travelers.Add(traveler);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Delete a trip by its ID
+        public async Task DeleteTrip(int id)
+        {
+            var trip = await _context.Trips.FindAsync(id);
+            if (trip == null)
+                throw new KeyNotFoundException($"Trip with Id {id} not found");
+
+            _context.Trips.Remove(trip);
+            await _context.SaveChangesAsync();
+        }
     }
 }
