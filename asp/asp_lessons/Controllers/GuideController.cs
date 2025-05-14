@@ -40,7 +40,7 @@ namespace aspapp.Controllers
         [AllowAnonymous]
         [HttpPost("create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Firstname,Lastname,Email,BirthDate")] GuideViewModel guideViewModel)
+        public async Task<IActionResult> Create([Bind("Firstname,Lastname,Email,Title")] GuideViewModel guideViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace aspapp.Controllers
                 var identityUser = new IdentityUser { UserName = guideViewModel.Email, Email = guideViewModel.Email, PasswordHash = passworddef };
                 var result = await _userManager.CreateAsync(identityUser);
 
-                if (result.Succeeded)
+                if (result.Succeeded || ModelState.IsValid) //nwm
                 {
                     await _userManager.AddToRoleAsync(identityUser, roleNames[1]);
                     await _guideService.AddGuide(guideViewModel); 

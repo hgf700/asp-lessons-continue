@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace aspapp.Controllers
 {
-    [Authorize(Roles = "Guide,Administrator")]
     [Route("trip")]
     public class TripController : Controller
     {
@@ -56,6 +55,8 @@ namespace aspapp.Controllers
         {
             if (ModelState.IsValid)
             {
+
+
                 // Make sure SelectedTravelerIds is set, even if it's empty
                 tripViewModel.SelectedTravelerIds ??= new List<int>();
 

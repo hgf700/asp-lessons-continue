@@ -7,6 +7,7 @@
 //    public class IdentityModel : PageModel
 //    {
 //        private readonly SignInManager<IdentityUser> _signInManager;
+//        //private readonly SignInManager<IdentityUser> _signInManager;
 
 //        public IdentityModel(SignInManager<IdentityUser> signInManager)
 //        {

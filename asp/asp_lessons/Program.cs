@@ -1,4 +1,5 @@
 using aspapp.Models;
+using aspapp.Models.Validator;
 using aspapp.Repositories;
 using aspapp.Services;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using aspapp.ExtraTools;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using FluentValidation.AspNetCore;
+using aspapp.Data.Models.Validator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,14 @@ builder.Services.AddScoped<ITripRepository, TripRepository>();
 builder.Services.AddScoped<ITravelerService, TravelerService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<IGuideService, GuideService>();
+
+builder.Services.AddControllersWithViews();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining<TripViewModelValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<TravelerViewModelValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<GuideViewModelValidator>();
 
 builder.Services.AddControllersWithViews();
 
