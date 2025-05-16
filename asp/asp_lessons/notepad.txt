@@ -1,3 +1,0 @@
-dotnet ef migrations add InitialMigration --project aspapp.Data --startup-project asp_lessons
-
-dotnet ef database update --project aspapp.Data --startup-project asp_lessons

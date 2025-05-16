@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace aspapp.Controllers
 {
-    [Authorize(Roles = "Guide,Administrator")]
     [Route("guide")]
     public class GuideController : Controller
     {
@@ -23,7 +22,7 @@ namespace aspapp.Controllers
         }
 
         // Index GET
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Guide")]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -32,12 +31,12 @@ namespace aspapp.Controllers
         }
 
         // Create GET
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Guide")]
         [HttpGet("create")]
         public IActionResult Create() => View();
 
         // Create POST
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin,Guide")]
         [HttpPost("create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Firstname,Lastname,Email,Title")] GuideViewModel guideViewModel)
