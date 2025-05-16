@@ -55,8 +55,6 @@ namespace aspapp.Controllers
         {
             if (ModelState.IsValid)
             {
-
-
                 // Make sure SelectedTravelerIds is set, even if it's empty
                 tripViewModel.SelectedTravelerIds ??= new List<int>();
 

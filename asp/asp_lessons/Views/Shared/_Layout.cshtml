@@ -19,64 +19,64 @@
 </head>
 <body>
     <header>
-         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom box-shadow mb-3"> 
-            
+        <!-- ZAMIANA: navbar-light -> navbar-dark, dodanie bg-dark -->
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">aspapp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand text-light" asp-area="" asp-page="/Index">aspapp</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Traveler" asp-action="Create">Traveler</a>
+                            <a class="nav-link text-light" asp-controller="Traveler" asp-action="Create">Traveler</a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated)
                         {
-
                             if (user.IsInRole("Guide") || user.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Guide" asp-action="Create">Guide</a>
+                                    <a class="nav-link text-light" asp-controller="Guide" asp-action="Create">Guide</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Trip" asp-action="Create">Trip</a>
+                                    <a class="nav-link text-light" asp-controller="Trip" asp-action="Create">Trip</a>
+                                </li>
+                            }
+                            if(user.IsInRole("Admin")){
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Admin" asp-action="Index">Admin</a>
                                 </li>
                             }
                         }
-
                     </ul>
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
-
                             var userr = await UserManager.GetUserAsync(User);
                             <li class="nav-item">
-                                <span class="navbar-text">
+                                <span class="navbar-text text-light">
                                     Zalogowany jako: @userr?.Email
                                 </span>
                             </li>
                             <li class="nav-item">
                                 <form method="post" asp-area="Identity" asp-page="/Account/Logout">
-                                    <button type="submit" class="nav-link btn btn-link">Wyloguj się</button>
+                                    <button type="submit" class="nav-link btn btn-link text-light">Wyloguj się</button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Zaloguj się</a>
+                                <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Login">Zaloguj się</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Zarejestruj się</a>
+                                <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Register">Zarejestruj się</a>
                             </li>
-
                         }
                     </ul>
                 </div>
@@ -91,9 +91,12 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - aspapp - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
+        @* <div class="container"> *@
+            @*
+                &copy; 2025 - aspapp - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            *@
+            
+        @* </div> *@
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
