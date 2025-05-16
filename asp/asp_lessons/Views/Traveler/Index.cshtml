@@ -1,7 +1,12 @@
 ﻿@model IEnumerable<aspapp.Models.VM.TravelerViewModel>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<IdentityUser> SignInManager
+@inject IHttpContextAccessor HttpContextAccessor
 
 @{
     ViewData["Title"] = "Traveler Index";
+    var user = HttpContextAccessor.HttpContext?.User;
 }
 
 <h1>Traveler List</h1>
@@ -32,7 +37,15 @@
                     <!-- Add edit or delete links here, if required -->
                     <a href="@Url.Action("Edit", "Traveler", new { id = traveler.TravelerId })" class="btn btn-warning btn-sm">Edit</a>
                 </td>
+
+                @if(user.IsInRole("Admin")){
+                <td>
+                    <!-- Add edit or delete links here, if required -->
+                    <a href="@Url.Action("Delete", "Traveler", new { id = traveler.TravelerId })" class="btn btn-warning btn-sm">Delete</a>
+                </td>
+                }
             </tr>
         }
     </tbody>
 </table>
+<a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Home</a>

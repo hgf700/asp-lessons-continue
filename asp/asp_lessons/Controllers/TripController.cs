@@ -15,14 +15,16 @@ namespace aspapp.Controllers
         private readonly IGuideService _guideService;
         private readonly ITravelerService _travelerService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILogger<HomeController> _logger;
         string[] roleNames = { "Admin", "Guide", "User" };
 
-        public TripController(ITripService tripService, IGuideService guideService, ITravelerService travelerService, UserManager<IdentityUser> userManager)
+        public TripController(ITripService tripService, IGuideService guideService, ITravelerService travelerService, UserManager<IdentityUser> userManager, ILogger<HomeController> logger)
         {
             _tripService = tripService;
             _guideService = guideService;
             _travelerService = travelerService;
             _userManager = userManager;
+            _logger = logger;
         }
 
         [Authorize(Roles = "Admin,Guide")]
@@ -61,6 +63,11 @@ namespace aspapp.Controllers
                 // Add the trip through the service
                 await _tripService.AddTrip(tripViewModel);
                 return RedirectToAction(nameof(Index));
+            }
+
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                _logger.LogInformation( "_LOGGER_"+error.ErrorMessage);
             }
 
             // Reload the lists of guides and travelers in case of validation failure

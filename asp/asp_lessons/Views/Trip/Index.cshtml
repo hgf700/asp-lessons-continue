@@ -1,7 +1,12 @@
 ﻿@model IEnumerable<aspapp.Models.VM.TripViewModel>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<IdentityUser> SignInManager
+@inject IHttpContextAccessor HttpContextAccessor
 
 @{
     ViewData["Title"] = "Trip List";
+    var user = HttpContextAccessor.HttpContext?.User;
 }
 
 <h1>Trip List</h1>
@@ -41,7 +46,15 @@
                     <a href="@Url.Action("Edit", "Trip", new { id = trip.TripId })" class="btn btn-warning btn-sm">Edit</a>
                     <!-- Add delete functionality here if needed -->
                 </td>
+                @if (user.IsInRole("Admin"))
+                {
+                    <td>
+                        <!-- Add edit or delete links here, if required -->
+                        <a href="@Url.Action("Delete", "Trip", new { id = trip.TripId })" class="btn btn-warning btn-sm">Delete</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>
 </table>
+<a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Home</a>

@@ -1,7 +1,12 @@
 ﻿@model IEnumerable<aspapp.Models.VM.GuideViewModel>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<IdentityUser> SignInManager
+@inject IHttpContextAccessor HttpContextAccessor
 
 @{
     ViewData["Title"] = "Guide List";
+    var user = HttpContextAccessor.HttpContext?.User;
 }
 
 <h1>Guide List</h1>
@@ -32,7 +37,16 @@
                     <!-- Add edit or delete links here, if required -->
                     <a href="@Url.Action("Edit", "Guide", new { id = guide.GuideId })" class="btn btn-warning btn-sm">Edit</a>
                 </td>
+
+                @if (user.IsInRole("Admin"))
+                {
+                    <td>
+                        <!-- Add edit or delete links here, if required -->
+                        <a href="@Url.Action("Delete", "Guide", new { id = guide.GuideId})" class="btn btn-warning btn-sm">Delete</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>
 </table>
+<a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Home</a>

@@ -1,9 +1,21 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<IdentityUser> SignInManager
+@inject IHttpContextAccessor HttpContextAccessor
+
 @{
     ViewData["Title"] = "Home page";
+    var user = HttpContextAccessor.HttpContext?.User;
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
+    @if (user.IsInRole("Admin"))
+    {
+        <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">Admin</a>
+        <a href="@Url.Action("Index", "Guide")" class="btn btn-secondary">Guide</a>
+        <a href="@Url.Action("Index", "Traveler")" class="btn btn-secondary">Traveler</a>
+        <a href="@Url.Action("Index", "Trip")" class="btn btn-secondary">Trip</a>
+    }
     @* <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
 </div>
