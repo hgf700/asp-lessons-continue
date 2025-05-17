@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using aspapp.Models;
-using aspapp.Models.VM;
 using aspapp.Services;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using aspapp.Models.VM;
 
 namespace aspapp.Controllers
 {

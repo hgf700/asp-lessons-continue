@@ -1,5 +1,7 @@
-﻿@model IEnumerable<aspapp.Models.VM.TravelerViewModel>
+﻿@using aspapp.Models.VM
+@model IEnumerable<aspapp.Models.VM.TravelerViewModel>
 @using Microsoft.AspNetCore.Identity
+
 @inject UserManager<IdentityUser> UserManager
 @inject SignInManager<IdentityUser> SignInManager
 @inject IHttpContextAccessor HttpContextAccessor

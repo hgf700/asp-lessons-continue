@@ -7,6 +7,7 @@
 @{
     ViewData["Title"] = "Trip List";
     var user = HttpContextAccessor.HttpContext?.User;
+    bool isAdmin = user != null && user.IsInRole("Admin");
 }
 
 <h1>Trip List</h1>
@@ -24,6 +25,10 @@
             <th>Guide</th>
             <th>Travelers</th>
             <th>Actions</th>
+            @if (isAdmin)
+            {
+                <th>Admin Actions</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -33,28 +38,45 @@
                 <td>@trip.Destination</td>
                 <td>@trip.StartDate.ToShortDateString()</td>
                 <td>@trip.EndDate.ToShortDateString()</td>
-                <td>@trip.Guide?.Firstname @trip.Guide?.Lastname</td>
                 <td>
-                    @foreach (var traveler in trip.Travelers)
+                    @* Zakładam, że masz w VM kolekcję Guides, z której możesz wyciągnąć imię i nazwisko po GuideId *@
+                    @{
+                        var guide = trip.Guides?.FirstOrDefault(g => g.GuideId == trip.GuideId);
+                    }
+                    @if (guide != null)
                     {
-                        <span>@traveler.Firstname @traveler.Lastname</span>
-
-                        <br />
+                        @guide.Firstname @guide.Lastname
+                    }
+                    else
+                    {
+                        <em>No Guide</em>
+                    }
+                </td>
+                <td>
+                    @if (trip.Travelers != null && trip.Travelers.Any())
+                    {
+                        foreach (var traveler in trip.Travelers)
+                        {
+                            <div>@traveler.Firstname @traveler.Lastname</div>
+                        }
+                    }
+                    else
+                    {
+                        <em>No Travelers</em>
                     }
                 </td>
                 <td>
                     <a href="@Url.Action("Edit", "Trip", new { id = trip.TripId })" class="btn btn-warning btn-sm">Edit</a>
-                    <!-- Add delete functionality here if needed -->
                 </td>
-                @if (user.IsInRole("Admin"))
+                @if (isAdmin)
                 {
                     <td>
-                        <!-- Add edit or delete links here, if required -->
-                        <a href="@Url.Action("Delete", "Trip", new { id = trip.TripId })" class="btn btn-warning btn-sm">Delete</a>
+                        <a href="@Url.Action("Delete", "Trip", new { id = trip.TripId })" class="btn btn-danger btn-sm">Delete</a>
                     </td>
                 }
             </tr>
         }
     </tbody>
 </table>
+
 <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Home</a>

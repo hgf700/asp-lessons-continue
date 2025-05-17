@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using aspapp.Models.VM;
 using aspapp.Models;
 using aspapp.Repositories;
 using AutoMapper;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using aspapp.Models.VM;
 
 namespace aspapp.Services
 {

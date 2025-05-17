@@ -3,17 +3,16 @@
     public class TripViewModel
     {
         public int TripId { get; set; }
-        public string Destination { get; set; } = string.Empty;
+        public string Destination { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public int GuideId { get; set; } // Wybrany przewodnik
-        public GuideViewModel? Guide { get; set; }
+        public int? GuideId { get; set; }
+        public int? TravelerId { get; set; }
 
-        public List<GuideViewModel> Guides { get; set; } = new(); // Lista przewodników do wyboru w formularzu
+        public IEnumerable<GuideViewModel> Guides { get; set; }
+        public IEnumerable<TravelerViewModel> Travelers { get; set; }
 
-        public List<TravelerViewModel> Travelers { get; set; } = new(); // Lista dostępnych podróżników do wyświetlenia
-
-        public List<int> SelectedTravelerIds { get; set; } = new(); // <-- NOWE: zaznaczeni podróżnicy
     }
+
 }

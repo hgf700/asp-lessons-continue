@@ -15,10 +15,14 @@ namespace aspapp.Controllers
         private readonly IGuideService _guideService;
         private readonly ITravelerService _travelerService;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly ILogger<HomeController> _logger;
-        string[] roleNames = { "Admin", "Guide", "User" };
+        private readonly ILogger<TripController> _logger;
 
-        public TripController(ITripService tripService, IGuideService guideService, ITravelerService travelerService, UserManager<IdentityUser> userManager, ILogger<HomeController> logger)
+        public TripController(
+            ITripService tripService,
+            IGuideService guideService,
+            ITravelerService travelerService,
+            UserManager<IdentityUser> userManager,
+            ILogger<TripController> logger)
         {
             _tripService = tripService;
             _guideService = guideService;
@@ -31,7 +35,7 @@ namespace aspapp.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var trips = await _tripService.GetAllTrips(); // Get all trips with associated data
+            var trips = await _tripService.GetAllTrips();
             return View(trips);
         }
 
@@ -39,13 +43,10 @@ namespace aspapp.Controllers
         [HttpGet("create")]
         public async Task<IActionResult> Create()
         {
-            // Prepare the guides and travelers lists for the form
-            var guides = await _guideService.GetAllGuides();
-            var travelers = await _travelerService.GetAllTravelers();
             var model = new TripViewModel
             {
-                Guides = guides,
-                Travelers = travelers
+                Guides = await _guideService.GetAllGuides(),
+                Travelers = await _travelerService.GetAllTravelers()
             };
             return View(model);
         }
@@ -57,20 +58,23 @@ namespace aspapp.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Make sure SelectedTravelerIds is set, even if it's empty
-                tripViewModel.SelectedTravelerIds ??= new List<int>();
-
-                // Add the trip through the service
-                await _tripService.AddTrip(tripViewModel);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _tripService.AddTrip(tripViewModel);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "[Create] Failed to add trip.");
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
             }
 
             foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
             {
-                _logger.LogInformation( "_LOGGER_"+error.ErrorMessage);
+                _logger.LogWarning("[Create] Validation error: {Message}", error.ErrorMessage);
             }
 
-            // Reload the lists of guides and travelers in case of validation failure
             tripViewModel.Guides = await _guideService.GetAllGuides();
             tripViewModel.Travelers = await _travelerService.GetAllTravelers();
             return View(tripViewModel);
@@ -82,14 +86,10 @@ namespace aspapp.Controllers
         {
             var trip = await _tripService.GetTripById(id);
             if (trip == null)
-            {
                 return NotFound();
-            }
 
-            // Załaduj przewodników i podróżników ponownie
             trip.Guides = await _guideService.GetAllGuides();
             trip.Travelers = await _travelerService.GetAllTravelers();
-
             return View(trip);
         }
 
@@ -99,16 +99,25 @@ namespace aspapp.Controllers
         public async Task<IActionResult> Edit(int id, TripViewModel tripViewModel)
         {
             if (id != tripViewModel.TripId)
-            {
                 return BadRequest();
-            }
 
             if (ModelState.IsValid)
             {
-                tripViewModel.SelectedTravelerIds ??= new List<int>();
+                try
+                {
+                    await _tripService.UpdateTrip(tripViewModel);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "[Edit] Failed to update trip.");
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
 
-                await _tripService.UpdateTrip(tripViewModel);
-                return RedirectToAction(nameof(Index));
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                _logger.LogWarning("[Edit] Validation error: {Message}", error.ErrorMessage);
             }
 
             tripViewModel.Guides = await _guideService.GetAllGuides();
@@ -122,11 +131,9 @@ namespace aspapp.Controllers
         {
             var trip = await _tripService.GetTripById(id);
             if (trip == null)
-            {
                 return NotFound();
-            }
 
-            return View(trip); // Confirmation view
+            return View(trip);
         }
 
         [Authorize(Roles = "Admin")]
@@ -134,10 +141,16 @@ namespace aspapp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _tripService.DeleteTrip(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _tripService.DeleteTrip(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[Delete] Failed to delete trip.");
+                return StatusCode(500, "Internal server error");
+            }
         }
-
-
     }
 }

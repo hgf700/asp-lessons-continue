@@ -15,8 +15,8 @@ namespace aspapp.Models
         // FK to Guide
         public int GuideId { get; set; }
         public Guide Guide { get; set; } = null!;
+        public int TravelerId { get; set; }
+        public Traveler Traveler { get; set; } = null!;
 
-        // Many-to-many relationship with Travelers
-        public ICollection<Traveler> Travelers { get; set; } = new List<Traveler>();
     }
 }

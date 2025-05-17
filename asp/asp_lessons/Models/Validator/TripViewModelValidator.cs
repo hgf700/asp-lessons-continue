@@ -23,17 +23,11 @@ namespace aspapp.Models.Validator
 
             RuleFor(x => x.Guides)
                 .NotNull().WithMessage("Lista przewodników nie może być null.")
-                .Must(list => list.Any())
                 .WithMessage("Musi być przynajmniej jeden przewodnik dostępny.");
 
             RuleFor(x => x.Travelers)
                 .NotNull().WithMessage("Lista podróżników nie może być null.")
-                .Must(list => list.Any())
                 .WithMessage("Musi być przynajmniej jeden podróżnik dostępny.");
-
-            RuleFor(x => x.SelectedTravelerIds)
-                .NotNull().WithMessage("Wybierz co najmniej jednego podróżnika.")
-                .Must(list => list.Any()).WithMessage("Wybierz co najmniej jednego podróżnika.");
         }
     }
 }

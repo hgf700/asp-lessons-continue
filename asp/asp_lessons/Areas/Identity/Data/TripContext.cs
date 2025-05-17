@@ -25,18 +25,17 @@ namespace aspapp.Models
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Trip>()
-                .HasMany(t => t.Travelers)
-                .WithMany(t => t.Trips)
-                .UsingEntity<TripTraveler>(
-                    j => j.HasOne(tt => tt.Traveler).WithMany().HasForeignKey(tt => tt.TravelerId),
-                    j => j.HasOne(tt => tt.Trip).WithMany().HasForeignKey(tt => tt.TripId),
-                    j => j.ToTable("TripTraveler"));
-
-            modelBuilder.Entity<Trip>()
                 .HasOne(t => t.Guide)
                 .WithMany(g => g.Trips)
                 .HasForeignKey(t => t.GuideId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Trip>()
+                .HasOne(t => t.Traveler)
+                .WithMany(t => t.Trips)
+                .HasForeignKey(t => t.TravelerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

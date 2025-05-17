@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Delete Trip";
+
+    // Znajdź przewodnika na podstawie GuideId i kolekcji Guides
+    var guide = Model.Guides?.FirstOrDefault(g => g.GuideId == Model.GuideId);
 }
 
 <h2>Delete Trip</h2>
@@ -20,7 +23,16 @@
     <dd class="col-sm-10">@Model.EndDate.ToShortDateString()</dd>
 
     <dt class="col-sm-2">Guide</dt>
-    <dd class="col-sm-10">@Model.Guide?.Firstname</dd>
+    <dd class="col-sm-10">
+        @if (guide != null)
+        {
+            @guide.Firstname @guide.Lastname
+        }
+        else
+        {
+            <em>No Guide</em>
+        }
+    </dd>
 </dl>
 
 <form asp-action="Delete" method="post">
