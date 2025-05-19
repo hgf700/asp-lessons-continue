@@ -37,3 +37,22 @@ body {
  table ,tr,td{
      color: white;
  }
+
+ a{
+     color: white;
+ }
+
+.form-control {
+    background-color: #1e1e1e; /* ciemne t³o */
+    color: white; /* bia³y tekst */
+    border: 1px solid #555; /* szary border */
+    border-radius: 4px; /* zaokr¹glenie rogów */
+    padding: 10px;
+}
+    .form-control:focus {
+        background-color: #2a2a2a;
+        color: white;
+        border-color: #258cfb;
+        outline: none;
+        box-shadow: 0 0 5px #258cfb;
+    }
