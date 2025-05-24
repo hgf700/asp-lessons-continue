@@ -43,10 +43,10 @@ body {
  }
 
 .form-control {
-    background-color: #1e1e1e; /* ciemne t³o */
-    color: white; /* bia³y tekst */
-    border: 1px solid #555; /* szary border */
-    border-radius: 4px; /* zaokr¹glenie rogów */
+    background-color: #1e1e1e; 
+    color: white; 
+    border: 1px solid #555; 
+    border-radius: 4px; 
     padding: 10px;
 }
     .form-control:focus {

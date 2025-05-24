@@ -11,6 +11,9 @@ using aspapp.ExtraTools;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using FluentValidation.AspNetCore;
 using aspapp.Data.Models.Validator;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,15 +34,31 @@ builder.Services.AddScoped<ITravelerService, TravelerService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<IGuideService, GuideService>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
+
+builder.Services.AddLocalization(options =>
+{
+    options.ResourcesPath = "Resources";
+});
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedcultures = new[]
+    {
+        new CultureInfo("en-US"),
+        new CultureInfo("pl-PL"),
+    };
+    options.DefaultRequestCulture = new RequestCulture("pl-PL");
+    options.SupportedUICultures = supportedcultures;
+});
+
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Services.AddValidatorsFromAssemblyContaining<TripViewModelValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<TravelerViewModelValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<GuideViewModelValidator>();
-
-builder.Services.AddControllersWithViews();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -88,6 +107,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 
 var app = builder.Build();
+
+app.UseRequestLocalization();
 
 using (var scope = app.Services.CreateScope())
 {

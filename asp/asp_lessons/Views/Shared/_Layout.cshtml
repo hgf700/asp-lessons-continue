@@ -1,7 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Localization
 @inject UserManager<IdentityUser> UserManager
 @inject SignInManager<IdentityUser> SignInManager
 @inject IHttpContextAccessor HttpContextAccessor
+@inject IViewLocalizer Localizer
 
 @{
     var user = HttpContextAccessor.HttpContext?.User;
@@ -30,10 +32,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Traveler" asp-action="Create">Traveler</a>
+                            <a class="nav-link text-light" asp-controller="Traveler" asp-action="Create">@Localizer["Traveler"]</a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated)
@@ -41,15 +43,15 @@
                             if (user.IsInRole("Guide") || user.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-light" asp-controller="Guide" asp-action="Create">Guide</a>
+                                    <a class="nav-link text-light" asp-controller="Guide" asp-action="Create">@Localizer["Guide"]</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-light" asp-controller="Trip" asp-action="Create">Trip</a>
+                                    <a class="nav-link text-light" asp-controller="Trip" asp-action="Create">@Localizer["Trip"]</a>
                                 </li>
                             }
                             if(user.IsInRole("Admin")){
                                 <li class="nav-item">
-                                    <a class="nav-link text-light" asp-controller="Admin" asp-action="Index">Admin</a>
+                                    <a class="nav-link text-light" asp-controller="Admin" asp-action="Index">@Localizer["Admin"]</a>
                                 </li>
                             }
                         }
@@ -60,22 +62,22 @@
                             var userr = await UserManager.GetUserAsync(User);
                             <li class="nav-item navbar-expand-sm navbar-toggleable-sm align-content-center">
                                 <span class="navbar-text text-light">
-                                    Zalogowany jako: @userr?.Email
+                                    @Localizer["loggedas"] @userr?.Email
                                 </span>
                             </li>
                             <li class="nav-item">
                                 <form method="post" asp-area="Identity" asp-page="/Account/Logout">
-                                    <button type="submit" class="nav-link btn btn-link text-light">Wyloguj się</button>
+                                    <button type="submit" class="nav-link btn btn-link text-light">@Localizer["Logout"]</button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Login">Zaloguj się</a>
+                                <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Login">@Localizer["Login"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Register">Zarejestruj się</a>
+                                <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Register">@Localizer["Register"]</a>
                             </li>
                         }
                     </ul>
