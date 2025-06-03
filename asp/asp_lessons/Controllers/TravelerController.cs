@@ -48,20 +48,24 @@ namespace aspapp.Controllers
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(identityUser, roleNames[2]);
-
                     await _travelerService.AddTraveler(traveler);
                     return RedirectToAction(nameof(Index));
                 }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                return View(traveler);
 
-                await _travelerService.AddTraveler(traveler);
-                return RedirectToAction(nameof(Index));
             }
             return View(traveler);
         }
 
-        [Authorize(Roles = "Admin,User")]
-        //[AllowAnonymous]
+        //[Authorize(Roles = "Admin,User")]
+        [AllowAnonymous]
         [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
@@ -70,7 +74,8 @@ namespace aspapp.Controllers
             return View(traveler);
         }
 
-        [Authorize(Roles = "Admin,User")]
+        //[Authorize(Roles = "Admin,User")]
+        [AllowAnonymous]
         [HttpPost("edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TravelerId,Firstname,Lastname,Email,BirthDate")] TravelerViewModel traveler)
@@ -85,7 +90,8 @@ namespace aspapp.Controllers
         }
 
         // Delete GET
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpGet("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -95,7 +101,8 @@ namespace aspapp.Controllers
         }
 
         // Delete POST
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpPost("delete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

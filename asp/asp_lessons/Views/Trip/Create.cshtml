@@ -6,9 +6,7 @@
 
 <h1>Create Trip</h1>
 
-
-
-<form asp-action="Create" method="post" class="p-4 border rounded bg-grey  text-white">
+<form asp-action="Create" method="post" class="p-4 border rounded bg-grey text-white">
     <div class="form-group">
         <label asp-for="Destination"></label>
         <input asp-for="Destination" class="form-control" />
@@ -19,12 +17,6 @@
         <label asp-for="StartDate"></label>
         <input asp-for="StartDate" type="date" class="form-control" />
         <span asp-validation-for="StartDate" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="EndDate"></label>
-        <input asp-for="EndDate" type="date" class="form-control" />
-        <span asp-validation-for="EndDate" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -46,7 +38,15 @@
     <button type="submit" class="btn btn-success">Create</button>
     <a asp-action="Index" class="btn btn-secondary">Back</a>
 </form>
-<div >
+
+<div class="p-4 border rounded bg-grey text-white">
+    <partial name="_ValidationScriptsPartial" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+</div>
+
+
+<div>
     @if (!Model.Guides?.Any() ?? true)
     {
         <div class="alert alert-warning">Brak dostępnych przewodników. Dodaj przynajmniej jednego przewodnika, aby utworzyć wycieczkę.</div>
@@ -56,7 +56,6 @@
         <div class="alert alert-warning">Brak dostępnych podróżników. Dodaj przynajmniej jednego podróżnika, aby utworzyć wycieczkę.</div>
     }
 </div>
-
 
 @section Scripts {
     @{

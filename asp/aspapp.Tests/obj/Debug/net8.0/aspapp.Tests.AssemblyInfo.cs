@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("aspapp.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b71e26908b8413fc801a131e1e750aab0507f3fa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee9fe4bf2d53250dd68f21d37940dc85b0da0f0c")]
 [assembly: System.Reflection.AssemblyProductAttribute("aspapp.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("aspapp.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

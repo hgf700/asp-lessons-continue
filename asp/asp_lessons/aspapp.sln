@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspapp", "aspapp.csproj", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "asp", "asp", "{CECBFE92-CB0D-4A9B-92CB-DBD67F9D079D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aspapp.Tests", "..\aspapp.Tests\aspapp.Tests.csproj", "{ABBA977B-7355-4EBB-B0E7-B55E9DEF5325}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{B9772702-722D-4A34-A73C-FD2735ABBC89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9772702-722D-4A34-A73C-FD2735ABBC89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9772702-722D-4A34-A73C-FD2735ABBC89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABBA977B-7355-4EBB-B0E7-B55E9DEF5325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABBA977B-7355-4EBB-B0E7-B55E9DEF5325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABBA977B-7355-4EBB-B0E7-B55E9DEF5325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABBA977B-7355-4EBB-B0E7-B55E9DEF5325}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

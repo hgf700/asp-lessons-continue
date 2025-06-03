@@ -47,12 +47,12 @@ namespace aspapp.Controllers
         }
 
         // Lista wszystkich wycieczek
-        [HttpGet("trips")]
-        public async Task<IActionResult> Trips()
-        {
-            var trips = await _tripService.GetAllTrips();
-            return View(trips);
-        }
+        //[HttpGet("trips")]
+        //public async Task<IActionResult> Trips()
+        //{
+        //    var trips = await _tripService.GetAllTrips();
+        //    return View(trips);
+        //}
 
         // Możesz również dodać możliwość usuwania:
         [HttpPost("delete-guide/{id}")]
@@ -71,12 +71,12 @@ namespace aspapp.Controllers
             return RedirectToAction(nameof(Travelers));
         }
 
-        [HttpPost("delete-trip/{id}")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteTrip(int id)
-        {
-            await _tripService.DeleteTrip(id);
-            return RedirectToAction(nameof(Trips));
-        }
+        //[HttpPost("delete-trip/{id}")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteTrip(int id)
+        //{
+        //    await _tripService.DeleteTrip(id);
+        //    return RedirectToAction(nameof(Trips));
+        //}
     }
 }

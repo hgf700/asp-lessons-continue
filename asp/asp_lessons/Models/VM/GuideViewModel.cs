@@ -7,7 +7,5 @@
         public string Lastname { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
-
-        public List<TripViewModel>? Trips { get; set; } // Opcjonalne, jeśli potrzebne
     }
 }

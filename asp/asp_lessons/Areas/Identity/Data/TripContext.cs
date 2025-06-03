@@ -14,7 +14,7 @@ namespace aspapp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder); 
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Guide>()
                 .Property(g => g.GuideId)
@@ -38,4 +38,5 @@ namespace aspapp.Models
 
         }
     }
+
 }

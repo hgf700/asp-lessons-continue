@@ -1,5 +1,5 @@
 using aspapp.Models;
-using aspapp.Models.Validator;
+//using aspapp.Models.Validator;
 using aspapp.Repositories;
 using aspapp.Services;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +56,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
-builder.Services.AddValidatorsFromAssemblyContaining<TripViewModelValidator>();
+//builder.Services.AddValidatorsFromAssemblyContaining<TripViewModelValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<TravelerViewModelValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<GuideViewModelValidator>();
 
@@ -74,7 +74,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     // Lockout settings.
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
-    options.Lockout.MaxFailedAccessAttempts = 10;
+    //options.Lockout.MaxFailedAccessAttempts = 10;
     options.Lockout.AllowedForNewUsers = true;
 
     // User settings.

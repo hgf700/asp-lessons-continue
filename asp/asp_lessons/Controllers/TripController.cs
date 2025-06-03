@@ -32,14 +32,6 @@ namespace aspapp.Controllers
         }
 
         [Authorize(Roles = "Admin,Guide")]
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            var trips = await _tripService.GetAllTrips();
-            return View(trips);
-        }
-
-        [Authorize(Roles = "Admin,Guide")]
         [HttpGet("create")]
         public async Task<IActionResult> Create()
         {
@@ -66,7 +58,7 @@ namespace aspapp.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "[Create] Failed to add trip.");
-                    ModelState.AddModelError(string.Empty, ex.Message);
+                    ModelState.AddModelError(string.Empty, "An unexpected error occurred while adding the trip.");
                 }
             }
 
@@ -79,6 +71,16 @@ namespace aspapp.Controllers
             tripViewModel.Travelers = await _travelerService.GetAllTravelers();
             return View(tripViewModel);
         }
+
+
+        [Authorize(Roles = "Admin,Guide")]
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var trips = await _tripService.GetAllTrips();
+            return View(trips);
+        }
+
 
         [Authorize(Roles = "Admin,Guide")]
         [HttpGet("edit/{id}")]
@@ -152,5 +154,6 @@ namespace aspapp.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
     }
 }
