@@ -27,14 +27,33 @@ namespace aspapp.Services
         }
 
 
+        //public async Task AddTrip(TripViewModel viewModel)
+        //{
+        //    if (viewModel == null)
+        //        throw new ArgumentNullException(nameof(viewModel));
+
+        //    var trip = _mapper.Map<Trip>(viewModel);
+        //    await _tripRepository.AddTrip(trip);
+        //}
+
         public async Task AddTrip(TripViewModel viewModel)
         {
             if (viewModel == null)
                 throw new ArgumentNullException(nameof(viewModel));
 
-            var trip = _mapper.Map<Trip>(viewModel);
+            var trip = new Trip
+            {
+                Destination = viewModel.Destination,
+                StartDate = viewModel.StartDate,
+                GuideId = viewModel.GuideId,
+                TravelerId = viewModel.TravelerId
+            };
+
+
+
             await _tripRepository.AddTrip(trip);
         }
+
 
         private void ValidateTripViewModel(TripViewModel viewModel)
         {

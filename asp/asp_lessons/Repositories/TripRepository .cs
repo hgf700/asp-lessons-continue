@@ -20,9 +20,9 @@ namespace aspapp.Repositories
 
             _context.Trips.Add(trip);
             await _context.SaveChangesAsync();
+
+
         }
-
-
 
         public IQueryable<Trip> GetAllTrips()
         {

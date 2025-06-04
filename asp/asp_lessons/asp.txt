@@ -1,0 +1,7 @@
+asp
+start bootstrap lepszy wyglad
+dok aplikacje dla wszystkiego
+paginacje dla index
+
+dla ui 4 testy
+dla controllera tez mozna 

@@ -48,6 +48,9 @@ namespace aspapp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TripViewModel tripViewModel)
         {
+            tripViewModel.Guides = await _guideService.GetAllGuides();
+            tripViewModel.Travelers = await _travelerService.GetAllTravelers();
+
             if (ModelState.IsValid)
             {
                 try
@@ -67,8 +70,6 @@ namespace aspapp.Controllers
                 _logger.LogWarning("[Create] Validation error: {Message}", error.ErrorMessage);
             }
 
-            tripViewModel.Guides = await _guideService.GetAllGuides();
-            tripViewModel.Travelers = await _travelerService.GetAllTravelers();
             return View(tripViewModel);
         }
 

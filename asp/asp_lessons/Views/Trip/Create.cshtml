@@ -55,6 +55,16 @@
     {
         <div class="alert alert-warning">Brak dostępnych podróżników. Dodaj przynajmniej jednego podróżnika, aby utworzyć wycieczkę.</div>
     }
+    @if (ViewData["ValidationErrors"] is List<string> errors && errors.Any())
+    {
+        <ul class="text-danger">
+            @foreach (var err in errors)
+            {
+                <li>@err</li>
+            }
+        </ul>
+    }
+
 </div>
 
 @section Scripts {

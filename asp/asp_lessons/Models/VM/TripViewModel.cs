@@ -18,7 +18,8 @@ namespace aspapp.Models.VM
         [Required(ErrorMessage = "Traveler is required")]
         public int? TravelerId { get; set; }
 
-        public IEnumerable<GuideViewModel> Guides { get; set; }
-        public IEnumerable<TravelerViewModel> Travelers { get; set; }
+        public IEnumerable<GuideViewModel> Guides { get; set; } = new List<GuideViewModel>();
+        public IEnumerable<TravelerViewModel> Travelers { get; set; } = new List<TravelerViewModel>();
+
     }
 }
