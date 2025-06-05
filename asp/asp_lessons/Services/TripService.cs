@@ -41,12 +41,17 @@ namespace aspapp.Services
             if (viewModel == null)
                 throw new ArgumentNullException(nameof(viewModel));
 
+            var guide = await _guideRepository.GetGuideById(viewModel.GuideId.Value);
+            var traveler = await _travelerRepository.GetTravelerById(viewModel.TravelerId.Value);
+
             var trip = new Trip
             {
                 Destination = viewModel.Destination,
                 StartDate = viewModel.StartDate,
                 GuideId = viewModel.GuideId,
-                TravelerId = viewModel.TravelerId
+                TravelerId = viewModel.TravelerId,
+                //Guide=guide,
+                //Traveler=traveler
             };
 
 
